@@ -1,0 +1,22 @@
+projectName: "coaching"
+namespace: "com.keystone.sports"
+templatesFolder: "./templates"
+commands:
+  resource:
+    path: boundary.api.${version}
+    namePattern: ${name}Resource
+  resource-mapper:
+    path: boundary.api.${version}
+    namePattern: ${name}ResourceMapper
+  orchestrator:
+    path: control.api.{version}
+    namePattern: ${name}Orchestrator
+  repository:
+    path: persistence
+    namePattern: ${name}Repository
+  entity:
+    path: persistence.entities
+    namePattern: ${name}Entity
+  create-command:
+    path: domain.commands
+    namePattern: Create${name}
