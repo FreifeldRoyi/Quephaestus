@@ -1,5 +1,5 @@
-projectName: "coaching"
-namespace: "com.keystone.sports"
+projectName: "testproject"
+namespace: "com.myproject"
 templatesFolder: "./templates"
 commands:
   resource:
