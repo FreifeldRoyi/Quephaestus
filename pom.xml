@@ -62,6 +62,7 @@
     </dependencies>
 
     <build>
+        <finalName>quaphaestus</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,6 +105,30 @@
 
     <profiles>
         <profile>
+            <id>os-linux</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-linux-aarch64</finalName>
+            </build>
+        </profile>
+        <profile>
+            <id>os-linux</id>
+            <activation>
+                <os>
+                    <name>MacOS</name>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-mac-aarch64</finalName>
+            </build>
+        </profile>
+        <profile>
             <id>native</id>
             <activation>
                 <property>
@@ -127,7 +152,7 @@
                                 <configuration>
                                     <systemPropertyVariables>
                                         <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner
+                                            ${project.build.directory}/${project.build.finalName}
                                         </native.image.path>
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager
                                         </java.util.logging.manager>

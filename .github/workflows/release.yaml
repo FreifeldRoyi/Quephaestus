@@ -7,8 +7,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,4 +22,6 @@ jobs:
           cache: maven
           cache-dependency-path: 'pom.xml'
       - name: Build (no tests)
-        run: mvn package -DskipTests
+        run: mvn package -DskipTests -Pnative
+      - name: list files
+        run: ls -l target/quaphaestus*
