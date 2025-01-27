@@ -32,6 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: quephaestus-${{ runner.os }} # TODO this is really bad
           path: target/quephaestus*-runner
           overwrite: true
 
