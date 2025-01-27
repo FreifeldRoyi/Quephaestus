@@ -117,7 +117,7 @@
             </build>
         </profile>
         <profile>
-            <id>os-linux</id>
+            <id>os-macos</id>
             <activation>
                 <os>
                     <name>MacOS</name>
