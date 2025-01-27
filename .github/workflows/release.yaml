@@ -24,4 +24,4 @@ jobs:
       - name: Build (no tests)
         run: mvn package -DskipTests -Pnative
       - name: list files
-        run: ls -l target/quaphaestus*
+        run: ls -l target/qua*
