@@ -28,16 +28,14 @@ public class InputStreamDatamapSource implements DatamapSource
 		{
 			for (var name : requiredParts)
 			{
-				if (COMMON_TEMPLATE_PARAMETERS.contains(name))
+				if (!this.datamap.containsKey(name))
 				{
-					continue;
+					this.descriptionPrinter.ifPresent(printer -> printer.accept(name));
+					var value = scanner.next();
+					this.datamap.put(name, value);
 				}
-				this.descriptionPrinter.ifPresent(printer -> printer.accept(name));
-				var value = scanner.next();
-				this.datamap.put(name, value);
 			}
 		}
 		return Map.copyOf(this.datamap);
 	}
-
 }

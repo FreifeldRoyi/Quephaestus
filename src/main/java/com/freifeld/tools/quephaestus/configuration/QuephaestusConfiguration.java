@@ -4,19 +4,27 @@ import java.util.Map;
 
 public class QuephaestusConfiguration
 {
-	private String projectName;
+	private String project;
 	private String namespace;
 	private String templatesFolder;
+
+	/**
+	 * Relative directory location under working directory to take into consideration
+	 * e.g.
+	 *  In Java, Generally speaking, code resides under src/main/java/...
+	 *  In this case, src/main/java might be a good candidate for a base directory
+	 */
+	private String baseDirectory;
 	private Map<String, QuephaestusCommand> commands;
 
-	public String getProjectName()
+	public String getProject()
 	{
-		return this.projectName;
+		return this.project;
 	}
 
-	public void setProjectName(String projectName)
+	public void setProject(String project)
 	{
-		this.projectName = projectName;
+		this.project = project;
 	}
 
 	public String getNamespace()
@@ -37,6 +45,16 @@ public class QuephaestusConfiguration
 	public void setTemplatesFolder(String templatesFolder)
 	{
 		this.templatesFolder = templatesFolder;
+	}
+
+	public String getBaseDirectory()
+	{
+		return baseDirectory;
+	}
+
+	public void setBaseDirectory(String baseDirectory)
+	{
+		this.baseDirectory = baseDirectory;
 	}
 
 	public Map<String, QuephaestusCommand> getCommands()

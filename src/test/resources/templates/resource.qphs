@@ -1,4 +1,4 @@
-package {namespace}.{projectName};
+package {namespace}.{project};
 
 public class {className}
 {

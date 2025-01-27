@@ -1,47 +1,50 @@
 package com.freifeld.tools.quephaestus.commands;
 
-import com.freifeld.tools.quephaestus.BlacksmithForge;
-import com.freifeld.tools.quephaestus.InputStreamDatamapSource;
+import com.freifeld.tools.quephaestus.Blacksmith;
+import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
+import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
+import picocli.CommandLine.*;
 import picocli.CommandLine.Model.CommandSpec;
-import picocli.CommandLine.Parameters;
-import picocli.CommandLine.Spec;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.INVALID_PARAMETER;
 
-@Command(name = "forge", mixinStandardHelpOptions = true, scope = CommandLine.ScopeType.INHERIT)
+@Command(name = "forge",
+         mixinStandardHelpOptions = true,
+         scope = CommandLine.ScopeType.INHERIT,
+         sortOptions = true,
+         sortSynopsis = true)
 public class ForgeCommand implements Runnable
 {
 	@Mixin
-	ConfigFileMixin configFile;
+	ConfigFileMixin configFileMixin;
 
 	@Mixin
-	ModuleMixin module;
+	ModuleMixin moduleMixin;
+
+	@Mixin
+	DirectoryMixin directoryMixin;
 
 	@Spec
-	CommandSpec spec;
+	CommandSpec commandSpec;
 
 	@Inject
-	BlacksmithForge forge;
+	Blacksmith blacksmith;
 
 	private String commandParameter;
 
 	@Parameters(paramLabel = "CMD_PARAMETER", index = "0", arity = "1")
 	private void setCommandParameter(String commandParameter)
 	{
-		final var possibleKeys = this.configFile.configuration().getCommands().keySet();
+		final var possibleKeys = this.configFileMixin.configuration().getCommands().keySet();
 		if (!possibleKeys.contains(commandParameter))
 		{
 			throw this.invalidCommandParameterException(commandParameter, possibleKeys);
@@ -49,16 +52,16 @@ public class ForgeCommand implements Runnable
 		this.commandParameter = commandParameter;
 	}
 
-	public CommandLine.ParameterException invalidCommandParameterException(String parameter, Set<String> possibleKeys)
+	public ParameterException invalidCommandParameterException(String parameter, Set<String> possibleKeys)
 	{
-		final var message = INVALID_PARAMETER.formatted(parameter, possibleKeys, this.configFile.configPath());
-		return new CommandLine.ParameterException(this.spec.commandLine(), message);
+		final var message = INVALID_PARAMETER.formatted(parameter, possibleKeys, this.configFileMixin.configPath());
+		return new ParameterException(this.commandSpec.commandLine(), message);
 	}
 
 
 	private Path findTemplateFile()
 	{
-		try (var fileStream = Files.list((this.configFile.templatePath())))
+		try (var fileStream = Files.list((this.configFileMixin.templatePath())))
 		{
 			var maybeFile = fileStream.filter(path -> path.getFileName()
 			                                              .toString()
@@ -72,31 +75,21 @@ public class ForgeCommand implements Runnable
 		}
 	}
 
-	private Map<String, String> initialDatamap()
-	{
-		final var configuration = this.configFile.configuration();
-		final var datamap = new HashMap<String, String>();
-		datamap.put("namespace", configuration.getNamespace());
-		datamap.put("projectName", configuration.getProjectName());
-		return datamap;
-	}
-
-	private Path outputPath()
-	{
-		return null;
-		//		this.configFile.
-	}
-
 	@Override
 	public void run()
 	{
 		final var templateFile = this.findTemplateFile();
-		final var renderedTemplate = this.forge.forgeOne(
-				templateFile, new InputStreamDatamapSource(
-						this.initialDatamap(),
-						System.in,
-						name -> this.spec.commandLine().getOut().println(name + "?")));
-		System.out.println(renderedTemplate);
+		var blueprint = new Blueprint(
+				templateFile,
+				this.commandParameter,
+				this.moduleMixin.getModuleName(),
+				this.moduleMixin.getModulePath(),
+				this.configFileMixin.configuration(),
+				this.directoryMixin.combined());
+		this.blacksmith.forgeOnce(blueprint);
+
+		// TODO printout done ?
+		System.out.println("DONE. created files are...");
 	}
 
 

@@ -1,22 +1,22 @@
-projectName: "testproject"
+project: "testproject"
 namespace: "com.myproject"
 templatesFolder: "./templates"
 commands:
   resource:
-    path: boundary.api.${version}
-    namePattern: ${name}Resource
+    path: "boundary/api/{version}"
+    namePattern: "{module}Resource.java"
   resource-mapper:
-    path: boundary.api.${version}
-    namePattern: ${name}ResourceMapper
+    path: "boundary/api/{version}"
+    namePattern: "{module}ResourceMapper.java"
   orchestrator:
-    path: control.api.{version}
-    namePattern: ${name}Orchestrator
+    path: "control/api/{version}"
+    namePattern: "{module}Orchestrator.java"
   repository:
-    path: persistence
-    namePattern: ${name}Repository
+    path: "persistence"
+    namePattern: "{module}Repository.java"
   entity:
-    path: persistence.entities
-    namePattern: ${name}Entity
+    path: "persistence/entities"
+    namePattern: "{module}Entity.java"
   create-command:
-    path: domain.commands
-    namePattern: Create${name}
+    path: "domain/commands"
+    namePattern: "Create{module}.java"

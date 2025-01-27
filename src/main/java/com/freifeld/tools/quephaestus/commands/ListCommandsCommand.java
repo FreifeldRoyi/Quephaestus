@@ -3,13 +3,14 @@ package com.freifeld.tools.quephaestus.commands;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
 @Command(name = "list-commands", mixinStandardHelpOptions = true, scope = CommandLine.ScopeType.INHERIT)
 public class ListCommandsCommand implements Runnable
 {
-	@CommandLine.Mixin
+	@Mixin
 	ConfigFileMixin configFile;
 
 	@Spec
