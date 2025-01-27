@@ -10,13 +10,13 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'graalvm'
           java-version: '23'
           cache: maven
           cache-dependency-path: 'pom.xml'
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Build and Test
         run: mvn package
