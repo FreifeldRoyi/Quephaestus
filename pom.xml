@@ -129,6 +129,18 @@
             </build>
         </profile>
         <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <name>windows</name>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-windows-${os.arch}</finalName>
+            </build>
+        </profile>
+        <profile>
             <id>native</id>
             <activation>
                 <property>
