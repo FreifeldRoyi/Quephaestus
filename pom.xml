@@ -62,7 +62,14 @@
     </dependencies>
 
     <build>
-<!--        <finalName>${project.artifactId}-${project.version}-mac-${os.arch}</finalName>-->
+        <finalName>${project.artifactId}-${project.version}-${os.detected.name}-${os.detected.arch}</finalName>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,42 +111,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>mac-os</id>
-            <activation>
-                <os>
-                    <name>Mac OS X</name>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <build>
-                <finalName>${project.artifactId}-${project.version}-mac-${os.arch}</finalName>
-            </build>
-        </profile>
-        <profile>
-            <id>linux</id>
-            <activation>
-                <os>
-                    <name>linux</name>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <build>
-                <finalName>${project.artifactId}-${project.version}-linux-${os.arch}</finalName>
-            </build>
-        </profile>
-        <profile>
-            <id>windows</id>
-            <activation>
-                <os>
-                    <name>windows</name>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <build>
-                <finalName>${project.artifactId}-${project.version}-windows-${os.arch}</finalName>
-            </build>
-        </profile>
         <profile>
             <id>native</id>
             <activation>
