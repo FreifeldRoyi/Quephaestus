@@ -23,6 +23,8 @@ jobs:
           cache-dependency-path: 'pom.xml'
       - name: Build (no tests)
         run: mvn package -DskipTests -Pnative
+      - name: Detect OS version
+        run: mvn --version
 #      - name: list files # TODO Delete later
 #        run: ls -l target/quephaestus*
 #      - name: move up
