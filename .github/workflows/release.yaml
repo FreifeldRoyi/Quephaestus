@@ -30,7 +30,7 @@ jobs:
 #      - name: rename artifact
 #        run: mv quephaestus*-runner $(ls quephaestus*-runner | sed s/-runner//gi | sed)
       - name: Upload artifact
-        uses: @actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           path: target/quephaestus*-runner
           overwrite: true
