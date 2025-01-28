@@ -1,6 +1,6 @@
 package com.freifeld.tools.quephaestus;
 
-import com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates;
+import com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates;
 import io.quarkus.test.junit.main.QuarkusMainLauncher;
 import io.quarkus.test.junit.main.QuarkusMainTest;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.PATH_ALREADY_EXISTS;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.PATH_ALREADY_EXISTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

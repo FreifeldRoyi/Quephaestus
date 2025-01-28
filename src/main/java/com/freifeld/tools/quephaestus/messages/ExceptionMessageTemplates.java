@@ -1,4 +1,4 @@
-package com.freifeld.tools.quephaestus.exceptions;
+package com.freifeld.tools.quephaestus.messages;
 
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.ParameterException;

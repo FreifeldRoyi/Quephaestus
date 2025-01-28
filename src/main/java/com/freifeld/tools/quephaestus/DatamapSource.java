@@ -1,9 +1,8 @@
 package com.freifeld.tools.quephaestus;
 
-import java.util.Map;
-import java.util.Set;
+import java.io.Closeable;
 
-public interface DatamapSource
+public interface DatamapSource extends Closeable
 {
-	void fillDataMap(Map<String, String> datasource, Set<String> requiredParts);
+	String valueFor(String slot);
 }

@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.DIRECTORY_DOES_NOT_EXIST;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.DIRECTORY_DOES_NOT_EXIST;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusMainTest

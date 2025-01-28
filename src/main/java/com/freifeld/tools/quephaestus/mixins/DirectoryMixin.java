@@ -9,8 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.absolutePathException;
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.directoryDoesNotExistException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.absolutePathException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.directoryDoesNotExistException;
 
 @ApplicationScoped
 public class DirectoryMixin

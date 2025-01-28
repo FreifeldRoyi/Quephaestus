@@ -6,7 +6,6 @@ import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -16,14 +15,11 @@ import picocli.CommandLine.Spec;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.invalidParameterException;
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.templateWasNotFound;
-import static picocli.CommandLine.Help.Ansi.AUTO;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidParameterException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templateWasNotFound;
+import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
-@Command(name = "forge",
-         mixinStandardHelpOptions = true,
-         sortOptions = true,
-         sortSynopsis = true)
+@Command(name = "forge", mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
 public class ForgeCommand implements Runnable
 {
 	@Mixin
@@ -81,12 +77,6 @@ public class ForgeCommand implements Runnable
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
 		final var forgedFiles = this.blacksmith.forge(blueprint);
-
-		final var successMessage = AUTO.string("""
-		                           \uD83C\uDF89 @|bold,fg(green) DONE|@ \uD83C\uDF89
-		                           Created:
-		                            - %s
-		                           """.trim().formatted(forgedFiles.iterator().next())); // There's only one
-		this.commandSpec.commandLine().getOut().println(successMessage);
+		forgeSuccessMessage(this.commandSpec, forgedFiles);
 	}
 }

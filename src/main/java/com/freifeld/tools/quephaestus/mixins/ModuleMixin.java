@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.absolutePathException;
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.moduleNotFoundException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.absolutePathException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.moduleNotFoundException;
 
 @ApplicationScoped
 public class ModuleMixin

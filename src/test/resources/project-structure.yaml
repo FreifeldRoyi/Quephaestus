@@ -9,7 +9,7 @@ commands:
     path: "boundary/api/{version}"
     namePattern: "{name}ResourceMapper.java"
   orchestrator:
-    path: "control/api/{version}"
+    path: "control"
     namePattern: "{name}Orchestrator.java"
   repository:
     path: "persistence"

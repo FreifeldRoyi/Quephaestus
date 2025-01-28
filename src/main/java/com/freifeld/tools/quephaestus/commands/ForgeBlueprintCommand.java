@@ -6,7 +6,6 @@ import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
@@ -15,18 +14,16 @@ import picocli.CommandLine.Spec;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.invalidParameterException;
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.templatesWereNotFound;
-import static picocli.CommandLine.Help.Ansi.AUTO;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidParameterException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templatesWereNotFound;
+import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
-@Command(name = "forge-blueprint",
-         mixinStandardHelpOptions = true,
-         sortOptions = true,
-         sortSynopsis = true)
+@Command(name = "forge-blueprint", mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
 public class ForgeBlueprintCommand implements Runnable
 {
 	@Mixin
@@ -82,26 +79,27 @@ public class ForgeBlueprintCommand implements Runnable
 		return templatePaths;
 	}
 
+	public Map<String, String> blueprintMappings()
+	{
+		return new HashMap<>(this.configFileMixin.configuration()
+		                                         .getBlueprints()
+		                                         .get(this.blueprintName)
+		                                         .getMappings());
+	}
+
 	@Override
 	public void run()
 	{
 		// TODO validate blueprint includes that are also in commands
-
 		final var templatePaths = this.findTemplateFiles();
 		final var blueprint = new Blueprint(
 				templatePaths,
+				this.blueprintMappings(),
 				this.moduleMixin.getModuleName(),
 				this.moduleMixin.getModulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
 		final var forgedFiles = this.blacksmith.forge(blueprint);
-
-		final var createdFiles = forgedFiles.stream().map(p -> " - " + p).collect(Collectors.joining("\n"));
-		final var successMessage = AUTO.string("""
-		                           \uD83C\uDF89 @|bold,fg(green) DONE|@ \uD83C\uDF89
-		                           Created:
-		                           %s
-		                           """.trim().formatted(createdFiles));
-		this.commandSpec.commandLine().getOut().println(successMessage);
+		forgeSuccessMessage(this.commandSpec, forgedFiles);
 	}
 }

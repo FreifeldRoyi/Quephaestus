@@ -24,14 +24,6 @@ public class Blacksmith
 	@Inject
 	FileSystemWriter writer;
 
-	private Set<String> getExpressionParts(Template template)
-	{
-		return template.getExpressions()
-		               .stream()
-		               .map(ex -> ex.getParts().getFirst().getName())
-		               .collect(Collectors.toSet());
-	}
-
 	/**
 	 * Creates the final path to write: root/module/package/filename
 	 *
@@ -62,13 +54,30 @@ public class Blacksmith
 
 	private Map<String, String> initialInterpolationSlots(Blueprint blueprint)
 	{
-		final var datamap = new HashMap<String, String>();
+		final var datasource = new HashMap<String, String>();
 		// 1. Configuration
-		datamap.put("project", blueprint.configuration().getProject());
-		datamap.put("namespace", blueprint.configuration().getNamespace());
-		datamap.put("module", blueprint.moduleName());
+		datasource.put("project", blueprint.configuration().getProject());
+		datasource.put("namespace", blueprint.configuration().getNamespace());
+		datasource.put("module", blueprint.moduleName());
 
-		return datamap;
+		// 2. External mappings - can be static or set from well known interpolation slots
+		final var externalMappings = blueprint.extraMappings().entrySet().stream().reduce(
+				new HashMap<String, String>(), (acc, entry) -> {
+					final var mappingTemplate = this.forge.parse(entry.getValue());
+					final var slots = this.forge.getInterpolationSlotsFrom(mappingTemplate);
+					final var value = slots.isEmpty() ?
+					                  entry.getValue() :
+					                  this.forge.render(mappingTemplate, datasource);
+					acc.put(entry.getKey(), value);
+					return acc;
+
+				}, (map1, map2) -> {
+					map1.putAll(map2);
+					return map1;
+				});
+		datasource.putAll(externalMappings);
+
+		return datasource;
 	}
 
 	private void fillDatasourceFromTemplate(
@@ -78,14 +87,14 @@ public class Blacksmith
 			Template commandPath
 	)
 	{
-		// 2. Template
-		final var templateInterpolationSlots = this.getExpressionParts(template);
+		// 3. Template
+		final var templateInterpolationSlots = this.forge.getInterpolationSlotsFrom(template);
 
-		// 3. filenameTemplate
-		final var filenameInterpolationSlots = this.getExpressionParts(filenameTemplate);
+		// 4. filenameTemplate
+		final var filenameInterpolationSlots = this.forge.getInterpolationSlotsFrom(filenameTemplate);
 
-		// 4. commandPath
-		final var commandPathInterpolationSlots = this.getExpressionParts(commandPath);
+		// 5. commandPath
+		final var commandPathInterpolationSlots = this.forge.getInterpolationSlotsFrom(commandPath);
 
 		// Collect all
 		final var interpolationSlots = Stream.of(
@@ -100,9 +109,14 @@ public class Blacksmith
 		 TODO when I'll provide a solution for data file (instead of manual input) need to change the following
 		  also, I don't like this code. It depends on System.in
 		 */
-		var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot));
-
-		inputDatasource.fillDataMap(datasource, interpolationSlots);
+		try (var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot)))
+		{
+			for (var slot : interpolationSlots)
+			{
+				var value = inputDatasource.valueFor(slot);
+				datasource.put(slot, value);
+			}
+		}
 	}
 
 	public Set<Path> forge(Blueprint blueprint)
@@ -152,38 +166,4 @@ public class Blacksmith
 
 		return filesToWrite.keySet();
 	}
-
-//	public void forgeOnce(Blueprint blueprint)
-//	{
-//		final var configuration = blueprint.configuration();
-//		final var commandParameterConfiguration = configuration.getCommands().get(blueprint.commandParameter());
-//		final var template = this.forge.parse(blueprint.templatePath());
-//		final var filenameTemplate = this.forge.parse(commandParameterConfiguration.getNamePattern());
-//		final var commandPathTemplate = this.forge.parse(commandParameterConfiguration.getPath());
-//
-//		final var datasource = this.fillDatasourceFromTemplate(
-//				this.initialInterpolationSlots(blueprint),
-//				template,
-//				filenameTemplate,
-//				commandPathTemplate);
-//
-//		var fileToWrite = this.forge.render(template, datasource);
-//		var filenameRendered = this.forge.render(filenameTemplate, datasource);
-//		var commandPathRendered = this.forge.render(commandPathTemplate, datasource);
-//
-//		var path = this.prepareOutputPath(
-//				blueprint.rootPath(),
-//				blueprint.modulePath(),
-//				commandPathRendered,
-//				filenameRendered);
-//
-//		try
-//		{
-//			this.writer.writeContent(path, fileToWrite);
-//		}
-//		catch (IOException e)
-//		{
-//			throw new RuntimeException(e); // TODO
-//		}
-//	}
 }
