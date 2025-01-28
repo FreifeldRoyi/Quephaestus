@@ -4,22 +4,22 @@ templatesFolder: "./templates"
 commands:
   resource:
     path: "boundary/api/{version}"
-    namePattern: "{name}Resource.java"
+    namePattern: "{name.toPascalCase}Resource.java"
   resource-mapper:
     path: "boundary/api/{version}"
-    namePattern: "{name}ResourceMapper.java"
+    namePattern: "{name.toPascalCase}ResourceMapper.java"
   orchestrator:
     path: "control"
-    namePattern: "{name}Orchestrator.java"
+    namePattern: "{name.toPascalCase}Orchestrator.java"
   repository:
     path: "persistence"
-    namePattern: "{name}Repository.java"
+    namePattern: "{name.toPascalCase}Repository.java"
   entity:
     path: "persistence/entities"
-    namePattern: "{name}Entity.java"
+    namePattern: "{name.toPascalCase}Entity.java"
   create-command:
     path: "domain/commands"
-    namePattern: "Create{name}.java"
+    namePattern: "Create{name.toPascalCase}.java"
 blueprints:
   full-module:
     parameters: [ resource, resource-mapper, orchestrator, repository, entity, create-command ]

@@ -22,7 +22,7 @@ public class InputStreamDatamapSource implements DatamapSource
 	public String valueFor(String slot)
 	{
 		this.descriptionPrinter.ifPresent(printer -> printer.accept(slot));
-		return this.scanner.next();
+		return this.scanner.nextLine();
 	}
 
 	@Override

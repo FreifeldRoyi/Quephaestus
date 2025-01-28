@@ -1,6 +1,7 @@
 package com.freifeld.tools.quephaestus;
 
 import io.quarkus.qute.Engine;
+import io.quarkus.qute.Expression;
 import io.quarkus.qute.Template;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -47,10 +49,14 @@ public class Forge
 		return templateInstance.render();
 	}
 
-	// TODO will be the only place that can extract expressions from template.
+	// TODO This will be the only place that can extract expressions from template.
 	//  by doing that, I'm containing qute function handling to a single place
-	public Set<String> getInterpolationSlotsFrom(Template template) {
-		return template.getExpressions().stream().map(expression -> expression.getParts().getFirst().getName()).collect(
-				Collectors.toSet());
+	public Set<String> getInterpolationSlotsFrom(Template template)
+	{
+		return template.getExpressions()
+		               .stream()
+		               .filter(Predicate.not(Expression::isLiteral))
+		               .map(expression -> expression.getParts().getFirst().getName())
+		               .collect(Collectors.toSet());
 	}
 }

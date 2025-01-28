@@ -5,6 +5,8 @@ public class {className}
 	public static void main(String[] args)
 	{
 	    System.out.println("{message}");
-	    System.out.println("{module}");
+	    {#if module != "payments"}
+	        System.out.println("{module}");
+	    {/if}
 	}
 }
