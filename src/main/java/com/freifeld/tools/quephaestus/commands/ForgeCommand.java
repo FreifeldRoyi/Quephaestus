@@ -7,19 +7,21 @@ import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
-import picocli.CommandLine.*;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
 
-import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.INVALID_PARAMETER;
+import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.invalidParameterException;
+import static com.freifeld.tools.quephaestus.exceptions.ExceptionMessageTemplates.templateWasNotFound;
+import static picocli.CommandLine.Help.Ansi.AUTO;
 
 @Command(name = "forge",
          mixinStandardHelpOptions = true,
-         scope = CommandLine.ScopeType.INHERIT,
          sortOptions = true,
          sortSynopsis = true)
 public class ForgeCommand implements Runnable
@@ -47,50 +49,44 @@ public class ForgeCommand implements Runnable
 		final var possibleKeys = this.configFileMixin.configuration().getCommands().keySet();
 		if (!possibleKeys.contains(commandParameter))
 		{
-			throw this.invalidCommandParameterException(commandParameter, possibleKeys);
+			throw invalidParameterException(
+					this.commandSpec,
+					commandParameter,
+					this.configFileMixin.configPath(),
+					possibleKeys);
 		}
 		this.commandParameter = commandParameter;
 	}
 
-	public ParameterException invalidCommandParameterException(String parameter, Set<String> possibleKeys)
-	{
-		final var message = INVALID_PARAMETER.formatted(parameter, possibleKeys, this.configFileMixin.configPath());
-		return new ParameterException(this.commandSpec.commandLine(), message);
-	}
-
-
 	private Path findTemplateFile()
 	{
-		try (var fileStream = Files.list((this.configFileMixin.templatePath())))
+		final var templatePath = this.configFileMixin.templatePath().resolve(this.commandParameter + ".qphs");
+		if (!Files.exists(templatePath))
 		{
-			var maybeFile = fileStream.filter(path -> path.getFileName()
-			                                              .toString()
-			                                              .startsWith(this.commandParameter + "."))
-			                          .findFirst(); // TODO better solution for path matching
-			return maybeFile.orElseThrow(() -> new RuntimeException("Template was not found")); // TODO better message + better exception
+			throw templateWasNotFound(this.commandSpec, this.commandParameter);
 		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e); // TODO
-		}
+
+		return templatePath;
 	}
 
 	@Override
 	public void run()
 	{
-		final var templateFile = this.findTemplateFile();
-		var blueprint = new Blueprint(
-				templateFile,
+		final var templatePath = this.findTemplateFile();
+		final var blueprint = new Blueprint(
+				templatePath,
 				this.commandParameter,
 				this.moduleMixin.getModuleName(),
 				this.moduleMixin.getModulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
-		this.blacksmith.forgeOnce(blueprint);
+		final var forgedFiles = this.blacksmith.forge(blueprint);
 
-		// TODO printout done ?
-		System.out.println("DONE. created files are...");
+		final var successMessage = AUTO.string("""
+		                           \uD83C\uDF89 @|bold,fg(green) DONE|@ \uD83C\uDF89
+		                           Created:
+		                            - %s
+		                           """.trim().formatted(forgedFiles.iterator().next())); // There's only one
+		this.commandSpec.commandLine().getOut().println(successMessage);
 	}
-
-
 }

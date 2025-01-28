@@ -4,19 +4,25 @@ templatesFolder: "./templates"
 commands:
   resource:
     path: "boundary/api/{version}"
-    namePattern: "{module}Resource.java"
+    namePattern: "{name}Resource.java"
   resource-mapper:
     path: "boundary/api/{version}"
-    namePattern: "{module}ResourceMapper.java"
+    namePattern: "{name}ResourceMapper.java"
   orchestrator:
     path: "control/api/{version}"
-    namePattern: "{module}Orchestrator.java"
+    namePattern: "{name}Orchestrator.java"
   repository:
     path: "persistence"
-    namePattern: "{module}Repository.java"
+    namePattern: "{name}Repository.java"
   entity:
     path: "persistence/entities"
-    namePattern: "{module}Entity.java"
+    namePattern: "{name}Entity.java"
   create-command:
     path: "domain/commands"
-    namePattern: "Create{module}.java"
+    namePattern: "Create{name}.java"
+blueprints:
+  full-module:
+    parameters: [ resource, resource-mapper, orchestrator, repository, entity, create-command ]
+    mappings:
+      name: "{module}"
+      version: "v3"

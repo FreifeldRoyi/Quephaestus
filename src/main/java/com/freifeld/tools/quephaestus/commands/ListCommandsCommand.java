@@ -1,13 +1,12 @@
 package com.freifeld.tools.quephaestus.commands;
 
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
-@Command(name = "list-commands", mixinStandardHelpOptions = true, scope = CommandLine.ScopeType.INHERIT)
+@Command(name = "list-commands", mixinStandardHelpOptions = true)
 public class ListCommandsCommand implements Runnable
 {
 	@Mixin

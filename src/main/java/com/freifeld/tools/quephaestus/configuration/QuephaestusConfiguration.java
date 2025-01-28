@@ -11,11 +11,12 @@ public class QuephaestusConfiguration
 	/**
 	 * Relative directory location under working directory to take into consideration
 	 * e.g.
-	 *  In Java, Generally speaking, code resides under src/main/java/...
-	 *  In this case, src/main/java might be a good candidate for a base directory
+	 * In Java, Generally speaking, code resides under src/main/java/...
+	 * In this case, src/main/java might be a good candidate for a base directory
 	 */
 	private String baseDirectory;
-	private Map<String, QuephaestusCommand> commands;
+	private Map<String, CommandDefinition> commands;
+	private Map<String, BlueprintDefinition> blueprints;
 
 	public String getProject()
 	{
@@ -57,13 +58,23 @@ public class QuephaestusConfiguration
 		this.baseDirectory = baseDirectory;
 	}
 
-	public Map<String, QuephaestusCommand> getCommands()
+	public Map<String, CommandDefinition> getCommands()
 	{
 		return this.commands;
 	}
 
-	public void setCommands(Map<String, QuephaestusCommand> commands)
+	public void setCommands(Map<String, CommandDefinition> commands)
 	{
 		this.commands = commands;
+	}
+
+	public Map<String, BlueprintDefinition> getBlueprints()
+	{
+		return blueprints;
+	}
+
+	public void setBlueprints(Map<String, BlueprintDefinition> blueprints)
+	{
+		this.blueprints = blueprints;
 	}
 }

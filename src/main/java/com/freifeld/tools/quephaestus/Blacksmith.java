@@ -71,7 +71,7 @@ public class Blacksmith
 		return datamap;
 	}
 
-	private Map<String, String> collectInterpolationSlots(
+	private void fillDatasourceFromTemplate(
 			Map<String, String> datasource,
 			Template template,
 			Template filenameTemplate,
@@ -93,53 +93,97 @@ public class Blacksmith
 				                                     filenameInterpolationSlots,
 				                                     commandPathInterpolationSlots)
 		                                     .flatMap(Collection::stream)
+		                                     .filter(slot -> !datasource.containsKey(slot))
 		                                     .collect(Collectors.toSet());
 
 		/*
 		 TODO when I'll provide a solution for data file (instead of manual input) need to change the following
 		  also, I don't like this code. It depends on System.in
 		 */
-		var inputDatasource = new InputStreamDatamapSource(
-				datasource,
-		                                                   System.in,
-		                                                   interpolationSlot -> System.out.printf(
-				                                                   "%s?%n",
-				                                                   interpolationSlot));
-		return inputDatasource.fillDataMap(interpolationSlots);
-		// TODO end here
+		var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot));
+
+		inputDatasource.fillDataMap(datasource, interpolationSlots);
 	}
 
-	public void forgeOnce(Blueprint blueprint)
+	public Set<Path> forge(Blueprint blueprint)
 	{
 		final var configuration = blueprint.configuration();
-		final var commandParameterConfiguration = configuration.getCommands().get(blueprint.commandParameter());
-		final var template = this.forge.parse(blueprint.templatePath());
-		final var filenameTemplate = this.forge.parse(commandParameterConfiguration.getNamePattern());
-		final var commandPathTemplate = this.forge.parse(commandParameterConfiguration.getPath());
-
-		final var datasource = this.collectInterpolationSlots(
-				this.initialInterpolationSlots(blueprint),
-				template,
-				filenameTemplate,
-				commandPathTemplate);
-
-		var fileToWrite = this.forge.render(template, datasource);
-		var filenameRendered = this.forge.render(filenameTemplate, datasource);
-		var commandPathRendered = this.forge.render(commandPathTemplate, datasource);
-
-		var path = this.prepareOutputPath(
-				blueprint.rootPath(),
-				blueprint.modulePath(),
-				commandPathRendered,
-				filenameRendered);
-
-		try
+		final var datasource = this.initialInterpolationSlots(blueprint);
+		final var filesToWrite = new HashMap<Path, String>();
+		for (var entry : blueprint.templatePaths().entrySet())
 		{
-			this.writer.writeContent(path, fileToWrite);
+			final var commandParameter = entry.getKey();
+			final var templatePath = entry.getValue();
+			final var commandParameterConfiguration = configuration.getCommands().get(commandParameter);
+
+			final var template = this.forge.parse(templatePath);
+			final var filenameTemplate = this.forge.parse(commandParameterConfiguration.getNamePattern());
+			final var commandPathTemplate = this.forge.parse(commandParameterConfiguration.getPath());
+
+			this.fillDatasourceFromTemplate(datasource, template, filenameTemplate, commandPathTemplate);
+			var fileToWrite = this.forge.render(template, datasource);
+			var filenameRendered = this.forge.render(filenameTemplate, datasource);
+			var commandPathRendered = this.forge.render(commandPathTemplate, datasource);
+
+			var path = this.prepareOutputPath(
+					blueprint.rootPath(),
+					blueprint.modulePath(),
+					commandPathRendered,
+					filenameRendered);
+			filesToWrite.put(path, fileToWrite);
 		}
-		catch (IOException e)
+
+		/*
+		The processes of resolving the values for interpolation slots and writing the files are separated on purpose
+			even though they can be in-lined. I wanted to create an experience of first getting all slots, and only
+			then doing everything else
+		 */
+		for (var fileEntry : filesToWrite.entrySet())
 		{
-			throw new RuntimeException(e); // TODO
+			try
+			{
+				this.writer.writeContent(fileEntry.getKey(), fileEntry.getValue());
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e); // TODO
+			}
 		}
+
+		return filesToWrite.keySet();
 	}
+
+//	public void forgeOnce(Blueprint blueprint)
+//	{
+//		final var configuration = blueprint.configuration();
+//		final var commandParameterConfiguration = configuration.getCommands().get(blueprint.commandParameter());
+//		final var template = this.forge.parse(blueprint.templatePath());
+//		final var filenameTemplate = this.forge.parse(commandParameterConfiguration.getNamePattern());
+//		final var commandPathTemplate = this.forge.parse(commandParameterConfiguration.getPath());
+//
+//		final var datasource = this.fillDatasourceFromTemplate(
+//				this.initialInterpolationSlots(blueprint),
+//				template,
+//				filenameTemplate,
+//				commandPathTemplate);
+//
+//		var fileToWrite = this.forge.render(template, datasource);
+//		var filenameRendered = this.forge.render(filenameTemplate, datasource);
+//		var commandPathRendered = this.forge.render(commandPathTemplate, datasource);
+//
+//		var path = this.prepareOutputPath(
+//				blueprint.rootPath(),
+//				blueprint.modulePath(),
+//				commandPathRendered,
+//				filenameRendered);
+//
+//		try
+//		{
+//			this.writer.writeContent(path, fileToWrite);
+//		}
+//		catch (IOException e)
+//		{
+//			throw new RuntimeException(e); // TODO
+//		}
+//	}
 }

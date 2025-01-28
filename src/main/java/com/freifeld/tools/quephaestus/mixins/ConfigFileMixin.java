@@ -40,7 +40,7 @@ public class ConfigFileMixin
 		                          configPath.resolve(templatesConfig);
 
 		if (!Files.isDirectory(path)) {
-			throw new RuntimeException("Templates folder does not exist " + path.toString()); // TODO change to proper exception
+			throw new RuntimeException("Templates folder does not exist " + path); // TODO change to proper exception
 		}
 
 		this.templatesPath = path;

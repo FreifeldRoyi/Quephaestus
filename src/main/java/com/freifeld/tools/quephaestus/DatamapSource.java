@@ -5,5 +5,5 @@ import java.util.Set;
 
 public interface DatamapSource
 {
-	Map<String,String> fillDataMap(Set<String> requiredParts);
+	void fillDataMap(Map<String, String> datasource, Set<String> requiredParts);
 }
