@@ -21,34 +21,21 @@ jobs:
           java-version: '23'
           cache: maven
           cache-dependency-path: 'pom.xml'
-      - name: Detect OS version
-        run: mvn --version
       - name: Build (no tests)
         run: mvn package -DskipTests -Pnative
-#      - name: list files # TODO Delete later
-#        run: ls -l target/quephaestus*
-#      - name: move up
-#        run: mv target/quephaestus*-runner ./
-#      - name: rename artifact
-#        run: mv quephaestus*-runner $(ls quephaestus*-runner | sed s/-runner//gi | sed)
+      - name: List runner file
+        id: runner-name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const files = fs.readdirSync("target");
+            const runner = files.find(file => file.endsWith("runner"));
+            const finalName = runner.slice(0,-7);
+            core.setOutput('runner-file', runner);
+            core.setOutput('final-name', finalName);
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: quephaestus-${{ runner.os }} # TODO this is really bad
-          path: target/quephaestus*-runner
+          name: ${{ steps.runner-name.outputs.final-name }}
+          path: target/${{ steps.runner-name.outputs.runner-file }}
           overwrite: true
-
-
-#      - name: Create Release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#          body: |
-#            Changes in this Release
-#            - First Change
-#            - Second Change
-#          draft: false
-#          prerelease: false
