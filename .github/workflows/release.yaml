@@ -19,7 +19,7 @@ jobs:
         with:
           distribution: 'graalvm'
           java-version: '23'
-          cache: maven
+          cache: 'maven'
           cache-dependency-path: 'pom.xml'
       - name: Build (no tests)
         run: mvn package -DskipTests -Pnative
@@ -28,6 +28,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require("fs");
             const files = fs.readdirSync("target");
             const runner = files.find(file => file.endsWith("runner"));
             const finalName = runner.slice(0,-7);
