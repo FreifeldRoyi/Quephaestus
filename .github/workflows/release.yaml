@@ -31,7 +31,7 @@ jobs:
             const fs = require("fs");
             const files = fs.readdirSync("target");
             const runner = files.find(file => file.endsWith("-runner") || file.endsWith("-runner.exe"));
-            const finalName = runner.slice(0,runner.lastIndexOf("-runner"));
+            const finalName = runner.replace(/(-runner)(.exe)?$/, '$2');
             core.setOutput('runner-file', runner);
             core.setOutput('final-name', finalName);
       - name: Upload artifact
