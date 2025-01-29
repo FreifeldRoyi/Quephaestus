@@ -22,7 +22,7 @@
         <!-- Plugins -->
         <version.plugins.compiler>3.13.0</version.plugins.compiler>
         <version.plugins.surefire>3.5.2</version.plugins.surefire>
-        <version.plugins.failsafe>3.5.1</version.plugins.failsafe>
+        <version.plugins.failsafe>3.5.2</version.plugins.failsafe>
     </properties>
 
     <dependencyManagement>
