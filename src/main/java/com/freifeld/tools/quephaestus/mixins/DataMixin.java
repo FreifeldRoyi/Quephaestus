@@ -2,7 +2,6 @@ package com.freifeld.tools.quephaestus.mixins;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates;
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Model.CommandSpec;
@@ -38,7 +37,7 @@ public class DataMixin
 		this.spec = spec;
 	}
 
-	public Map<String, String> getMappings()
+	public Map<String, String> mappings()
 	{
 		return this.mappings != null ? this.mappings : Collections.emptyMap();
 	}

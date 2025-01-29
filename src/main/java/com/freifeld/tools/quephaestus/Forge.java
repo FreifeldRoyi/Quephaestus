@@ -41,7 +41,7 @@ public class Forge
 	public String render(Template template, Map<String, String> data)
 	{
 		var templateInstance = template.instance();
-		for (var slot : this.getInterpolationSlotsFrom(template))
+		for (var slot : this.interpolationSlotsFrom(template))
 		{
 			templateInstance = templateInstance.data(slot, data.get(slot));
 		}
@@ -51,7 +51,7 @@ public class Forge
 
 	// TODO This will be the only place that can extract expressions from template.
 	//  by doing that, I'm containing qute function handling to a single place
-	public Set<String> getInterpolationSlotsFrom(Template template)
+	public Set<String> interpolationSlotsFrom(Template template)
 	{
 		return template.getExpressions()
 		               .stream()

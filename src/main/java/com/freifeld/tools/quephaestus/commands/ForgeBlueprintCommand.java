@@ -96,8 +96,8 @@ public class ForgeBlueprintCommand implements Runnable
 		final var blueprint = new Blueprint(
 				templatePaths,
 				this.blueprintMappings(),
-				this.moduleMixin.getModuleName(),
-				this.moduleMixin.getModulePath(),
+				this.moduleMixin.moduleName(),
+				this.moduleMixin.modulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
 		try

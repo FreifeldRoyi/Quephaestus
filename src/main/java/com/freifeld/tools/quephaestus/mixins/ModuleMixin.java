@@ -50,12 +50,12 @@ public class ModuleMixin
 		this.modulePath = modulePath;
 	}
 
-	public Path getModulePath()
+	public Path modulePath()
 	{
 		return this.modulePath;
 	}
 
-	public String getModuleName()
+	public String moduleName()
 	{
 		return this.moduleName;
 	}

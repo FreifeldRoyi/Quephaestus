@@ -66,7 +66,7 @@ public class Blacksmith
 		final var externalMappings = blueprint.mappings().entrySet().stream().reduce(
 				new HashMap<String, String>(), (acc, entry) -> {
 					final var mappingTemplate = this.forge.parse(entry.getValue());
-					final var slots = this.forge.getInterpolationSlotsFrom(mappingTemplate);
+					final var slots = this.forge.interpolationSlotsFrom(mappingTemplate);
 					final var value = slots.isEmpty() ?
 					                  entry.getValue() :
 					                  this.forge.render(mappingTemplate, datasource);
@@ -90,13 +90,13 @@ public class Blacksmith
 	) throws MissingDataException
 	{
 		// 3. Template
-		final var templateInterpolationSlots = this.forge.getInterpolationSlotsFrom(template);
+		final var templateInterpolationSlots = this.forge.interpolationSlotsFrom(template);
 
 		// 4. filenameTemplate
-		final var filenameInterpolationSlots = this.forge.getInterpolationSlotsFrom(filenameTemplate);
+		final var filenameInterpolationSlots = this.forge.interpolationSlotsFrom(filenameTemplate);
 
 		// 5. elementPath
-		final var elementPathInterpolationSlots = this.forge.getInterpolationSlotsFrom(elementPath);
+		final var elementPathInterpolationSlots = this.forge.interpolationSlotsFrom(elementPath);
 
 		// Collect all
 		final var interpolationSlots = Stream.of(

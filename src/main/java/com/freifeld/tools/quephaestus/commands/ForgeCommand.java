@@ -72,9 +72,9 @@ public class ForgeCommand implements Runnable
 		final var blueprint = new Blueprint(
 				templatePath,
 				this.element,
-				this.dataMixin.getMappings(),
-				this.moduleMixin.getModuleName(),
-				this.moduleMixin.getModulePath(),
+				this.dataMixin.mappings(),
+				this.moduleMixin.moduleName(),
+				this.moduleMixin.modulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
 
