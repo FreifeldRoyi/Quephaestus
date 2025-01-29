@@ -21,8 +21,8 @@ jobs:
           java-version: '23'
           cache: 'maven'
           cache-dependency-path: 'pom.xml'
-      - name: Build
-        run: mvn package -Pnative
+      - name: Build & test
+        run: mvn verify
       - name: Report coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.1
@@ -33,6 +33,8 @@ jobs:
 #          min-coverage-changed-files: 60
           title: Code Coverage
           update-comment: true
+      - name: Generate native image
+        run: mvn package -Pnative
       - name: Set runner name
         id: runner-name
         uses: actions/github-script@v7
