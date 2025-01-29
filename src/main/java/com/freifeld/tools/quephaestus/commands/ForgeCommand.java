@@ -2,6 +2,7 @@ package com.freifeld.tools.quephaestus.commands;
 
 import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
+import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
 import com.freifeld.tools.quephaestus.mixins.DataMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
@@ -16,8 +17,7 @@ import picocli.CommandLine.Spec;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidElementException;
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templateWasNotFound;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.*;
 import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
 @Command(name = "forge", mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
@@ -33,7 +33,7 @@ public class ForgeCommand implements Runnable
 	DirectoryMixin directoryMixin;
 
 	@Mixin
-	DataMixin data;
+	DataMixin dataMixin;
 
 	@Spec
 	CommandSpec commandSpec;
@@ -49,11 +49,7 @@ public class ForgeCommand implements Runnable
 		final var possibleKeys = this.configFileMixin.configuration().getElements().keySet();
 		if (!possibleKeys.contains(element))
 		{
-			throw invalidElementException(
-					this.commandSpec,
-					element,
-					this.configFileMixin.configPath(),
-					possibleKeys);
+			throw invalidElementException(this.commandSpec, element, this.configFileMixin.configPath(), possibleKeys);
 		}
 		this.element = element;
 	}
@@ -76,11 +72,20 @@ public class ForgeCommand implements Runnable
 		final var blueprint = new Blueprint(
 				templatePath,
 				this.element,
+				this.dataMixin.getMappings(),
 				this.moduleMixin.getModuleName(),
 				this.moduleMixin.getModulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
-		final var forgedFiles = this.blacksmith.forge(blueprint);
-		forgeSuccessMessage(this.commandSpec, forgedFiles);
+
+		try
+		{
+			final var forgedFiles = this.blacksmith.forge(blueprint);
+			forgeSuccessMessage(this.commandSpec, forgedFiles);
+		}
+		catch (MissingDataException e)
+		{
+			throw interpolationSlotsMissingValues(this.commandSpec, e.missingData());
+		}
 	}
 }

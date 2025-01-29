@@ -1,12 +1,11 @@
 package com.freifeld.tools.quephaestus.configuration;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Map;
 
 public record Blueprint(
 		Map<String, Path> templatePaths,
-		Map<String, String> extraMappings,
+		Map<String, String> mappings,
 		String moduleName,
 		Path modulePath,
 		QuephaestusConfiguration configuration,
@@ -16,18 +15,13 @@ public record Blueprint(
 	public Blueprint(
 			Path templatePath,
 			String element,
+			Map<String, String> mappings,
 			String moduleName,
 			Path modulePath,
 			QuephaestusConfiguration configuration,
 			Path rootPath
 	)
 	{
-		this(
-				Map.of(element, templatePath),
-				Collections.emptyMap(),
-				moduleName,
-				modulePath,
-				configuration,
-				rootPath);
+		this(Map.of(element, templatePath), mappings, moduleName, modulePath, configuration, rootPath);
 	}
 }

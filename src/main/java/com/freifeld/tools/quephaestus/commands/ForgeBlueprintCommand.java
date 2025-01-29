@@ -2,6 +2,7 @@ package com.freifeld.tools.quephaestus.commands;
 
 import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
+import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
@@ -19,8 +20,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidElementException;
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templatesWereNotFound;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.*;
 import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
 @Command(name = "forge-blueprint", mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
@@ -63,10 +63,10 @@ public class ForgeBlueprintCommand implements Runnable
 		final var blueprintDefinition = this.configFileMixin.configuration().getBlueprints().get(this.blueprintName);
 		final var elements = blueprintDefinition.getElements();
 		final var templatePaths = elements.stream()
-		                                    .collect(Collectors.toMap(
-				                                    Function.identity(),
-				                                    s -> this.configFileMixin.templatePath()
-				                                                             .resolve(s + ".qphs")));
+		                                  .collect(Collectors.toMap(
+				                                  Function.identity(),
+				                                  s -> this.configFileMixin.templatePath()
+				                                                           .resolve(s + ".qphs")));
 		final var missing = templatePaths.values()
 		                                 .stream()
 		                                 .filter(path -> !Files.exists(path))
@@ -90,6 +90,7 @@ public class ForgeBlueprintCommand implements Runnable
 	@Override
 	public void run()
 	{
+
 		// TODO validate blueprint includes that are also in commands
 		final var templatePaths = this.findTemplateFiles();
 		final var blueprint = new Blueprint(
@@ -99,7 +100,14 @@ public class ForgeBlueprintCommand implements Runnable
 				this.moduleMixin.getModulePath(),
 				this.configFileMixin.configuration(),
 				this.directoryMixin.combined());
-		final var forgedFiles = this.blacksmith.forge(blueprint);
-		forgeSuccessMessage(this.commandSpec, forgedFiles);
+		try
+		{
+			final var forgedFiles = this.blacksmith.forge(blueprint);
+			forgeSuccessMessage(this.commandSpec, forgedFiles);
+		}
+		catch (MissingDataException e)
+		{
+			throw interpolationSlotsMissingValues(this.commandSpec, e.missingData());
+		}
 	}
 }

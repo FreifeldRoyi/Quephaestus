@@ -1,6 +1,7 @@
 package com.freifeld.tools.quephaestus;
 
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
+import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
 import io.quarkus.qute.Template;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,7 +63,7 @@ public class Blacksmith
 		datasource.put("module", blueprint.moduleName());
 
 		// 2. External mappings - can be static or set from well known interpolation slots
-		final var externalMappings = blueprint.extraMappings().entrySet().stream().reduce(
+		final var externalMappings = blueprint.mappings().entrySet().stream().reduce(
 				new HashMap<String, String>(), (acc, entry) -> {
 					final var mappingTemplate = this.forge.parse(entry.getValue());
 					final var slots = this.forge.getInterpolationSlotsFrom(mappingTemplate);
@@ -85,7 +87,7 @@ public class Blacksmith
 			Template template,
 			Template filenameTemplate,
 			Template elementPath
-	)
+	) throws MissingDataException
 	{
 		// 3. Template
 		final var templateInterpolationSlots = this.forge.getInterpolationSlotsFrom(template);
@@ -105,21 +107,29 @@ public class Blacksmith
 		                                     .filter(slot -> !datasource.containsKey(slot))
 		                                     .collect(Collectors.toSet());
 
+
+		if (!datasource.keySet().containsAll(interpolationSlots))
+		{
+			final var missing = interpolationSlots.stream()
+			                                      .filter(Predicate.not(datasource::containsKey))
+			                                      .collect(Collectors.toSet());
+			throw new MissingDataException(missing);
+		}
 		/*
 		 TODO when I'll provide a solution for data file (instead of manual input) need to change the following
 		  also, I don't like this code. It depends on System.in
 		 */
-		try (var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot)))
-		{
-			for (var slot : interpolationSlots)
-			{
-				var value = inputDatasource.valueFor(slot);
-				datasource.put(slot, value);
-			}
-		}
+		//		try (var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot)))
+		//		{
+		//			for (var slot : interpolationSlots)
+		//			{
+		//				var value = inputDatasource.valueFor(slot);
+		//				datasource.put(slot, value);
+		//			}
+		//		}
 	}
 
-	public Set<Path> forge(Blueprint blueprint)
+	public Set<Path> forge(Blueprint blueprint) throws MissingDataException
 	{
 		final var configuration = blueprint.configuration();
 		final var datasource = this.initialInterpolationSlots(blueprint);
