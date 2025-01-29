@@ -16,7 +16,7 @@ public class SuccessMessageTemplates
 	                                                            %s
 	                                                            """.trim());
 
-	public static final String POSSIBLE_ELEMENTS = "Possible elements names are: %s";
+	public static final String POSSIBLE_ELEMENTS = "Possible element names are: %s";
 
 	public static void forgeSuccessMessage(CommandSpec spec, Collection<Path> paths)
 	{

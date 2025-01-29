@@ -29,7 +29,7 @@ class EntryCommandTest
 		var result = launcher.launch(args);
 		assertEquals(0, result.exitCode());
 		assertEquals(
-				"Possible elements names are: [resource, resource-mapper, orchestrator, repository, entity, create-command]",
+				"Possible element names are: [resource, resource-mapper, orchestrator, repository, entity, create-command]",
 				result.getOutput());
 	}
 }
