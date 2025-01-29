@@ -2,11 +2,13 @@ package com.freifeld.tools.quephaestus.mixins;
 
 import com.freifeld.tools.quephaestus.configuration.ConfigReader;
 import com.freifeld.tools.quephaestus.configuration.QuephaestusConfiguration;
+import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.Option;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@ApplicationScoped
 public class ConfigFileMixin
 {
 	private QuephaestusConfiguration configuration;
@@ -14,10 +16,7 @@ public class ConfigFileMixin
 	private Path configPath;
 	private Path templatesPath;
 
-	@Option(names = { "-f", "--file-path" },
-	        description = "Configuration file path",
-	        order = 0,
-	        required = false)
+	@Option(names = { "-f", "--file-path" }, description = "Configuration file path", order = 0, required = false)
 	private void setConfigFileOption(String fileName)
 	{
 		final var config = ConfigReader.readConfig(fileName);
@@ -29,17 +28,19 @@ public class ConfigFileMixin
 		this.setTemplatesFolder();
 	}
 
-	private void setConfigPath(String fileName) {
+	private void setConfigPath(String fileName)
+	{
 		this.configPath = Path.of(fileName);
 	}
-	private void setTemplatesFolder() {
+
+	private void setTemplatesFolder()
+	{
 		final var templatesConfig = Path.of(this.configuration.getTemplatesFolder());
 		final var configPath = this.configPath.getParent();
-		final var path = templatesConfig.isAbsolute() ?
-		                          templatesConfig :
-		                          configPath.resolve(templatesConfig);
+		final var path = templatesConfig.isAbsolute() ? templatesConfig : configPath.resolve(templatesConfig);
 
-		if (!Files.isDirectory(path)) {
+		if (!Files.isDirectory(path))
+		{
 			throw new RuntimeException("Templates folder does not exist " + path); // TODO change to proper exception
 		}
 
@@ -56,7 +57,8 @@ public class ConfigFileMixin
 		return this.configPath;
 	}
 
-	public Path templatePath() {
+	public Path templatePath()
+	{
 		return this.templatesPath;
 	}
 }

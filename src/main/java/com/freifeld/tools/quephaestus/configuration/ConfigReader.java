@@ -1,7 +1,7 @@
 package com.freifeld.tools.quephaestus.configuration;
 
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,11 +12,10 @@ public class ConfigReader
 {
 	public static QuephaestusConfiguration readConfig(String configFile)
 	{
+		final var objectMapper = new ObjectMapper(new YAMLFactory());
 		try (var readFile = new FileInputStream(configFile))
 		{
-			var options = new LoaderOptions();
-			var yaml = new Yaml(options);
-			return yaml.loadAs(readFile, QuephaestusConfiguration.class);
+			return objectMapper.readValue(readFile, QuephaestusConfiguration.class);
 		}
 		catch (FileNotFoundException e)
 		{
