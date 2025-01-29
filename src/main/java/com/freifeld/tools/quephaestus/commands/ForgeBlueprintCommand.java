@@ -46,7 +46,7 @@ public class ForgeBlueprintCommand implements Runnable
 	@Parameters(paramLabel = "BLUEPRINT", index = "0", arity = "1")
 	private void setBlueprintName(String blueprintName)
 	{
-		final var possibleKeys = this.configFileMixin.configuration().getBlueprints().keySet();
+		final var possibleKeys = this.configFileMixin.configuration().blueprints().keySet();
 		if (!possibleKeys.contains(blueprintName))
 		{
 			throw invalidElementException(
@@ -60,8 +60,8 @@ public class ForgeBlueprintCommand implements Runnable
 
 	private Map<String, Path> findTemplateFiles()
 	{
-		final var blueprintDefinition = this.configFileMixin.configuration().getBlueprints().get(this.blueprintName);
-		final var elements = blueprintDefinition.getElements();
+		final var blueprintDefinition = this.configFileMixin.configuration().blueprints().get(this.blueprintName);
+		final var elements = blueprintDefinition.elements();
 		final var templatePaths = elements.stream()
 		                                  .collect(Collectors.toMap(
 				                                  Function.identity(),
@@ -82,9 +82,9 @@ public class ForgeBlueprintCommand implements Runnable
 	public Map<String, String> blueprintMappings()
 	{
 		return new HashMap<>(this.configFileMixin.configuration()
-		                                         .getBlueprints()
+		                                         .blueprints()
 		                                         .get(this.blueprintName)
-		                                         .getMappings());
+		                                         .mappings());
 	}
 
 	@Override

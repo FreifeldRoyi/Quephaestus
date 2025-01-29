@@ -20,6 +20,6 @@ public class ListCommandsCommand implements Runnable
 	{
 		this.spec.commandLine()
 		         .getOut()
-		         .println("Possible element names are: " + this.configFile.configuration().getElements().keySet());
+		         .println("Possible element names are: " + this.configFile.configuration().elements().keySet());
 	}
 }

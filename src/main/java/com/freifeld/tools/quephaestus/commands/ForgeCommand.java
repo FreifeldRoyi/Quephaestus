@@ -46,7 +46,7 @@ public class ForgeCommand implements Runnable
 	@Parameters(paramLabel = "ELEMENT", index = "0", arity = "1")
 	private void setElement(String element)
 	{
-		final var possibleKeys = this.configFileMixin.configuration().getElements().keySet();
+		final var possibleKeys = this.configFileMixin.configuration().elements().keySet();
 		if (!possibleKeys.contains(element))
 		{
 			throw invalidElementException(this.commandSpec, element, this.configFileMixin.configPath(), possibleKeys);

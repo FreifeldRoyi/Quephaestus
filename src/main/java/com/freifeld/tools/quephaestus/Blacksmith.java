@@ -58,8 +58,8 @@ public class Blacksmith
 	{
 		final var datasource = new HashMap<String, String>();
 		// 1. Configuration
-		datasource.put("project", blueprint.configuration().getProject());
-		datasource.put("namespace", blueprint.configuration().getNamespace());
+		datasource.put("project", blueprint.configuration().project());
+		datasource.put("namespace", blueprint.configuration().namespace());
 		datasource.put("module", blueprint.moduleName());
 
 		// 2. External mappings - can be static or set from well known interpolation slots
@@ -138,11 +138,11 @@ public class Blacksmith
 		{
 			final var element = entry.getKey();
 			final var templatePath = entry.getValue();
-			final var elementConfiguration = configuration.getElements().get(element);
+			final var elementConfiguration = configuration.elements().get(element);
 
 			final var template = this.forge.parse(templatePath);
-			final var filenameTemplate = this.forge.parse(elementConfiguration.getNamePattern());
-			final var elementPathTemplate = this.forge.parse(elementConfiguration.getPath());
+			final var filenameTemplate = this.forge.parse(elementConfiguration.namePattern());
+			final var elementPathTemplate = this.forge.parse(elementConfiguration.path());
 
 			this.fillDatasourceFromTemplate(datasource, template, filenameTemplate, elementPathTemplate);
 			var fileToWrite = this.forge.render(template, datasource);

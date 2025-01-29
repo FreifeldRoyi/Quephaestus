@@ -35,7 +35,7 @@ public class ConfigFileMixin
 
 	private void setTemplatesFolder()
 	{
-		final var templatesConfig = Path.of(this.configuration.getTemplatesFolder());
+		final var templatesConfig = Path.of(this.configuration.templatesFolder());
 		final var configPath = this.configPath.getParent();
 		final var path = templatesConfig.isAbsolute() ? templatesConfig : configPath.resolve(templatesConfig);
 
