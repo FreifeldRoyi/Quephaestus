@@ -6,7 +6,7 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
-@Command(name = "list-commands", mixinStandardHelpOptions = true)
+@Command(name = "list-elements", mixinStandardHelpOptions = true)
 public class ListCommandsCommand implements Runnable
 {
 	@Mixin
@@ -20,6 +20,6 @@ public class ListCommandsCommand implements Runnable
 	{
 		this.spec.commandLine()
 		         .getOut()
-		         .println("Possible command names are: " + this.configFile.configuration().getCommands().keySet());
+		         .println("Possible element names are: " + this.configFile.configuration().getElements().keySet());
 	}
 }

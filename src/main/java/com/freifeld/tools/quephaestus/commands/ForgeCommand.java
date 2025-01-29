@@ -3,6 +3,7 @@ package com.freifeld.tools.quephaestus.commands;
 import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
+import com.freifeld.tools.quephaestus.mixins.DataMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
@@ -15,7 +16,7 @@ import picocli.CommandLine.Spec;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidParameterException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidElementException;
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templateWasNotFound;
 import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
@@ -31,35 +32,38 @@ public class ForgeCommand implements Runnable
 	@Mixin
 	DirectoryMixin directoryMixin;
 
+	@Mixin
+	DataMixin data;
+
 	@Spec
 	CommandSpec commandSpec;
 
 	@Inject
 	Blacksmith blacksmith;
 
-	private String commandParameter;
+	private String element;
 
-	@Parameters(paramLabel = "CMD_PARAMETER", index = "0", arity = "1")
-	private void setCommandParameter(String commandParameter)
+	@Parameters(paramLabel = "ELEMENT", index = "0", arity = "1")
+	private void setElement(String element)
 	{
-		final var possibleKeys = this.configFileMixin.configuration().getCommands().keySet();
-		if (!possibleKeys.contains(commandParameter))
+		final var possibleKeys = this.configFileMixin.configuration().getElements().keySet();
+		if (!possibleKeys.contains(element))
 		{
-			throw invalidParameterException(
+			throw invalidElementException(
 					this.commandSpec,
-					commandParameter,
+					element,
 					this.configFileMixin.configPath(),
 					possibleKeys);
 		}
-		this.commandParameter = commandParameter;
+		this.element = element;
 	}
 
 	private Path findTemplateFile()
 	{
-		final var templatePath = this.configFileMixin.templatePath().resolve(this.commandParameter + ".qphs");
+		final var templatePath = this.configFileMixin.templatePath().resolve(this.element + ".qphs");
 		if (!Files.exists(templatePath))
 		{
-			throw templateWasNotFound(this.commandSpec, this.commandParameter);
+			throw templateWasNotFound(this.commandSpec, this.element);
 		}
 
 		return templatePath;
@@ -71,7 +75,7 @@ public class ForgeCommand implements Runnable
 		final var templatePath = this.findTemplateFile();
 		final var blueprint = new Blueprint(
 				templatePath,
-				this.commandParameter,
+				this.element,
 				this.moduleMixin.getModuleName(),
 				this.moduleMixin.getModulePath(),
 				this.configFileMixin.configuration(),

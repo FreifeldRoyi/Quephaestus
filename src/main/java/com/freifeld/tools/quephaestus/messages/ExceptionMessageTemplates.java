@@ -17,8 +17,8 @@ public class ExceptionMessageTemplates
 
 	public static final String MODULE_NOT_DEFINED = "Module is not defined";
 
-	public static final String INVALID_PARAMETER = """
-	                                               '%s' is not a valid parameter name. Possible values are: %s.
+	public static final String INVALID_ELEMENT = """
+	                                               '%s' is not a valid element name. Possible values are: %s.
 	                                               Loaded configuration from: %s
 	                                               """.trim();
 
@@ -62,14 +62,14 @@ public class ExceptionMessageTemplates
 		return new ParameterException(spec.commandLine(), message);
 	}
 
-	public static ParameterException invalidParameterException(
+	public static ParameterException invalidElementException(
 			CommandSpec spec,
-			String parameter,
+			String element,
 			Path configPath,
 			Set<String> possibleKeys
 	)
 	{
-		final var message = INVALID_PARAMETER.formatted(parameter, possibleKeys, configPath);
+		final var message = INVALID_ELEMENT.formatted(element, possibleKeys, configPath);
 		return new ParameterException(spec.commandLine(), message);
 	}
 

@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class InputStreamDatamapSource implements DatamapSource
+public class InputStreamDatamapSource implements InterpolationSlotResolver
 {
 	private final InputStream inputStream;
 	private final Optional<Consumer<String>> descriptionPrinter;

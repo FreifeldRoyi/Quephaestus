@@ -1,6 +1,6 @@
 package com.freifeld.tools.quephaestus.configuration;
 
-public class CommandDefinition
+public class Element
 {
 		String path;
 		String namePattern;

@@ -5,17 +5,17 @@ import java.util.Set;
 
 public class BlueprintDefinition
 {
-	private Set<String> parameters;
+	private Set<String> elements;
 	private Map<String, String> mappings;
 
-	public Set<String> getParameters()
+	public Set<String> getElements()
 	{
-		return this.parameters;
+		return this.elements;
 	}
 
-	public void setParameters(Set<String> parameters)
+	public void setElements(Set<String> elements)
 	{
-		this.parameters = parameters;
+		this.elements = elements;
 	}
 
 	public Map<String, String> getMappings()

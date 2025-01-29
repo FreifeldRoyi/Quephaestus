@@ -21,15 +21,15 @@ class ForgeCommandTest
 	}
 
 	@Test
-	public void testGenerateCommand_commandNameDoesNotExist(QuarkusMainLauncher launcher)
+	public void testForgeCommand_elementNameDoesNotExist(QuarkusMainLauncher launcher)
 	{
-		var parameter = "controller";
-		var launchParams = createLaunchParams().withConfigPath().withParameter(parameter).withModule("my-controller");
+		var element = "controller";
+		var launchParams = createLaunchParams().withConfigPath().withElement(element).withModule("my-controller");
 		var buildArgs = launchParams.build();
 		var result = launcher.launch(buildArgs);
 		assertEquals(2, result.exitCode());
-		assertTrue(result.getErrorOutput().startsWith(ExceptionMessageTemplates.INVALID_PARAMETER.formatted(
-				parameter,
+		assertTrue(result.getErrorOutput().startsWith(ExceptionMessageTemplates.INVALID_ELEMENT.formatted(
+				element,
 				"[resource, resource-mapper, orchestrator, repository, entity, create-command]",
 				launchParams.configFilePath.getPath())));
 	}
@@ -41,7 +41,7 @@ class ForgeCommandTest
 		var dir = Files.createTempDirectory(dirName);
 		var buildArgs = createLaunchParams().withConfigPath()
 		                                    .withModule(dir.toString())
-		                                    .withParameter("resource")
+		                                    .withElement("resource")
 		                                    .build();
 		var result = launcher.launch(buildArgs);
 		assertEquals(0, result.exitCode());
@@ -54,7 +54,7 @@ class ForgeCommandTest
 		var path = Files.createTempFile(fileName, "");
 		var buildArgs = createLaunchParams().withConfigPath()
 		                                    .withModule(path.toString())
-		                                    .withParameter("resource")
+		                                    .withElement("resource")
 		                                    .build();
 		var result = launcher.launch(buildArgs);
 		assertEquals(2, result.exitCode());

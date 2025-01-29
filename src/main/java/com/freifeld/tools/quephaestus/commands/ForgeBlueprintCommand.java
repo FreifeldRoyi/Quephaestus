@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidParameterException;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidElementException;
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templatesWereNotFound;
 import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
 
@@ -49,7 +49,7 @@ public class ForgeBlueprintCommand implements Runnable
 		final var possibleKeys = this.configFileMixin.configuration().getBlueprints().keySet();
 		if (!possibleKeys.contains(blueprintName))
 		{
-			throw invalidParameterException(
+			throw invalidElementException(
 					this.commandSpec,
 					blueprintName,
 					this.configFileMixin.configPath(),
@@ -61,8 +61,8 @@ public class ForgeBlueprintCommand implements Runnable
 	private Map<String, Path> findTemplateFiles()
 	{
 		final var blueprintDefinition = this.configFileMixin.configuration().getBlueprints().get(this.blueprintName);
-		final var parameters = blueprintDefinition.getParameters();
-		final var templatePaths = parameters.stream()
+		final var elements = blueprintDefinition.getElements();
+		final var templatePaths = elements.stream()
 		                                    .collect(Collectors.toMap(
 				                                    Function.identity(),
 				                                    s -> this.configFileMixin.templatePath()
@@ -73,7 +73,7 @@ public class ForgeBlueprintCommand implements Runnable
 		                                 .collect(Collectors.toSet());
 		if (!missing.isEmpty())
 		{
-			throw templatesWereNotFound(this.commandSpec, parameters, missing);
+			throw templatesWereNotFound(this.commandSpec, elements, missing);
 		}
 
 		return templatePaths;

@@ -10,7 +10,7 @@ public class LauncherParamsBuilder
 	public String subCommand;
 	public File configFilePath;
 	public String moduleName;
-	public String parameter;
+	public String element;
 
 	public LauncherParamsBuilder withConfigPath()
 	{
@@ -47,8 +47,8 @@ public class LauncherParamsBuilder
 		return this;
 	}
 
-	public LauncherParamsBuilder withParameter(String parameter) {
-		this.parameter = parameter;
+	public LauncherParamsBuilder withElement(String element) {
+		this.element = element;
 		return this;
 	}
 
@@ -71,8 +71,8 @@ public class LauncherParamsBuilder
 		}
 
 
-		if (this.parameter != null) {
-			commands.add(this.parameter);
+		if (this.element != null) {
+			commands.add(this.element);
 		}
 
 		var asArray = new String[commands.size()];

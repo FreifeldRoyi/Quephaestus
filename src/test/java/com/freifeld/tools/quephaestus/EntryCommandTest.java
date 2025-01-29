@@ -13,7 +13,7 @@ class EntryCommandTest
 {
 	private static LauncherParamsBuilder createLaunchParams()
 	{
-		return new LauncherParamsBuilder().withSubCommandName("list-commands");
+		return new LauncherParamsBuilder().withSubCommandName("list-elements");
 	}
 
 	@Test
@@ -23,13 +23,13 @@ class EntryCommandTest
 	}
 
 	@Test
-	public void testListCommandsCommand(QuarkusMainLauncher launcher)
+	public void testListElementsCommand(QuarkusMainLauncher launcher)
 	{
 		var args = createLaunchParams().withConfigPath().build();
 		var result = launcher.launch(args);
 		assertEquals(0, result.exitCode());
 		assertEquals(
-				"Possible command names are: [resource, resource-mapper, orchestrator, repository, entity, create-command]",
+				"Possible elements names are: [resource, resource-mapper, orchestrator, repository, entity, create-command]",
 				result.getOutput());
 	}
 }

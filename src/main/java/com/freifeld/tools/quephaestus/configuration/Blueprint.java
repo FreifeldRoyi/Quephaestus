@@ -15,7 +15,7 @@ public record Blueprint(
 {
 	public Blueprint(
 			Path templatePath,
-			String commandParameter,
+			String element,
 			String moduleName,
 			Path modulePath,
 			QuephaestusConfiguration configuration,
@@ -23,7 +23,7 @@ public record Blueprint(
 	)
 	{
 		this(
-				Map.of(commandParameter, templatePath),
+				Map.of(element, templatePath),
 				Collections.emptyMap(),
 				moduleName,
 				modulePath,

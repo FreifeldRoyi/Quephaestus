@@ -84,7 +84,7 @@ public class Blacksmith
 			Map<String, String> datasource,
 			Template template,
 			Template filenameTemplate,
-			Template commandPath
+			Template elementPath
 	)
 	{
 		// 3. Template
@@ -93,14 +93,14 @@ public class Blacksmith
 		// 4. filenameTemplate
 		final var filenameInterpolationSlots = this.forge.getInterpolationSlotsFrom(filenameTemplate);
 
-		// 5. commandPath
-		final var commandPathInterpolationSlots = this.forge.getInterpolationSlotsFrom(commandPath);
+		// 5. elementPath
+		final var elementPathInterpolationSlots = this.forge.getInterpolationSlotsFrom(elementPath);
 
 		// Collect all
 		final var interpolationSlots = Stream.of(
 				                                     templateInterpolationSlots,
 				                                     filenameInterpolationSlots,
-				                                     commandPathInterpolationSlots)
+				                                     elementPathInterpolationSlots)
 		                                     .flatMap(Collection::stream)
 		                                     .filter(slot -> !datasource.containsKey(slot))
 		                                     .collect(Collectors.toSet());
@@ -126,23 +126,23 @@ public class Blacksmith
 		final var filesToWrite = new HashMap<Path, String>();
 		for (var entry : blueprint.templatePaths().entrySet())
 		{
-			final var commandParameter = entry.getKey();
+			final var element = entry.getKey();
 			final var templatePath = entry.getValue();
-			final var commandParameterConfiguration = configuration.getCommands().get(commandParameter);
+			final var elementConfiguration = configuration.getElements().get(element);
 
 			final var template = this.forge.parse(templatePath);
-			final var filenameTemplate = this.forge.parse(commandParameterConfiguration.getNamePattern());
-			final var commandPathTemplate = this.forge.parse(commandParameterConfiguration.getPath());
+			final var filenameTemplate = this.forge.parse(elementConfiguration.getNamePattern());
+			final var elementPathTemplate = this.forge.parse(elementConfiguration.getPath());
 
-			this.fillDatasourceFromTemplate(datasource, template, filenameTemplate, commandPathTemplate);
+			this.fillDatasourceFromTemplate(datasource, template, filenameTemplate, elementPathTemplate);
 			var fileToWrite = this.forge.render(template, datasource);
 			var filenameRendered = this.forge.render(filenameTemplate, datasource);
-			var commandPathRendered = this.forge.render(commandPathTemplate, datasource);
+			var elementPathRendered = this.forge.render(elementPathTemplate, datasource);
 
 			var path = this.prepareOutputPath(
 					blueprint.rootPath(),
 					blueprint.modulePath(),
-					commandPathRendered,
+					elementPathRendered,
 					filenameRendered);
 			filesToWrite.put(path, fileToWrite);
 		}

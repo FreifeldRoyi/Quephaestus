@@ -1,7 +1,7 @@
 project: "testproject"
 namespace: "com.myproject"
 templatesFolder: "./templates"
-commands:
+elements:
   resource:
     path: "boundary/api/{version}"
     namePattern: "{name.toPascalCase}Resource.java"
@@ -22,7 +22,7 @@ commands:
     namePattern: "Create{name.toPascalCase}.java"
 blueprints:
   full-module:
-    parameters: [ resource, resource-mapper, orchestrator, repository, entity, create-command ]
+    elements: [ resource, resource-mapper, orchestrator, repository, entity, create-command ]
     mappings:
       name: "{module}"
       version: "v3"
