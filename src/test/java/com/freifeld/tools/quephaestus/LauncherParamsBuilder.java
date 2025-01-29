@@ -9,29 +9,38 @@ public class LauncherParamsBuilder
 {
 	public String subCommand;
 	public File configFilePath;
+	public String workingDirectory;
+	public String baseDirectory;
 	public String moduleName;
 	public String element;
 
 	public LauncherParamsBuilder withConfigPath()
 	{
-		URI resource = null;
 		try
 		{
-			resource = this.getClass().getClassLoader().getResource("project-structure.yaml").toURI();
+			URI resource = this.getClass().getClassLoader().getResource("project-structure.yaml").toURI();
+			this.configFilePath = new File(resource);
+			return this;
 		}
 		catch (URISyntaxException e)
 		{
 			throw new RuntimeException(e); // TODO
 		}
-		this.configFilePath = new File(resource);
-//		this.configFilePath = resource.toExternalForm().replaceFirst(resource.getProtocol() + ":", "");
-		return this;
 	}
 
 	public LauncherParamsBuilder withConfigPath(File path)
 	{
 		this.configFilePath = path;
-		//		this.commands.add("--file-path=" + path);
+		return this;
+	}
+
+	public LauncherParamsBuilder withWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
+		return this;
+	}
+
+	public LauncherParamsBuilder withBaseDirectory(String baseDirectory) {
+		this.baseDirectory = baseDirectory;
 		return this;
 	}
 
@@ -47,7 +56,8 @@ public class LauncherParamsBuilder
 		return this;
 	}
 
-	public LauncherParamsBuilder withElement(String element) {
+	public LauncherParamsBuilder withElement(String element)
+	{
 		this.element = element;
 		return this;
 	}
@@ -55,7 +65,6 @@ public class LauncherParamsBuilder
 	public String[] build()
 	{
 		var commands = new LinkedList<String>();
-		//		commands.add("quaphestus");
 
 		if (this.subCommand != null)
 		{
@@ -71,7 +80,8 @@ public class LauncherParamsBuilder
 		}
 
 
-		if (this.element != null) {
+		if (this.element != null)
+		{
 			commands.add(this.element);
 		}
 

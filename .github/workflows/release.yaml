@@ -21,9 +21,19 @@ jobs:
           java-version: '23'
           cache: 'maven'
           cache-dependency-path: 'pom.xml'
-      - name: Build (no tests)
-        run: mvn package -DskipTests -Pnative
-      - name: List runner file
+      - name: Build
+        run: mvn package -Pnative
+      - name: Report coverage
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: ${{ github.workspace }}/target/jacoco-report/jacoco.xml
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          min-coverage-overall: 40
+#          min-coverage-changed-files: 60
+          title: Code Coverage
+          update-comment: true
+      - name: Set runner name
         id: runner-name
         uses: actions/github-script@v7
         with:

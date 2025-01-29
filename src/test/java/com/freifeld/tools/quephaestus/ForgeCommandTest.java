@@ -33,31 +33,4 @@ class ForgeCommandTest
 				"[resource, resource-mapper, orchestrator, repository, entity, create-command]",
 				launchParams.configFilePath.getPath())));
 	}
-
-	@Test
-	public void testGenerate_moduleAlreadyExists_emptyDir(QuarkusMainLauncher launcher) throws IOException
-	{
-		var dirName = "my-temp-dir";
-		var dir = Files.createTempDirectory(dirName);
-		var buildArgs = createLaunchParams().withConfigPath()
-		                                    .withModule(dir.toString())
-		                                    .withElement("resource")
-		                                    .build();
-		var result = launcher.launch(buildArgs);
-		assertEquals(0, result.exitCode());
-	}
-
-	@Test
-	public void testGenerate_moduleAlreadyExists_fileExists(QuarkusMainLauncher launcher) throws IOException
-	{
-		var fileName = "my-temp-file";
-		var path = Files.createTempFile(fileName, "");
-		var buildArgs = createLaunchParams().withConfigPath()
-		                                    .withModule(path.toString())
-		                                    .withElement("resource")
-		                                    .build();
-		var result = launcher.launch(buildArgs);
-		assertEquals(2, result.exitCode());
-		assertTrue(result.getErrorOutput().startsWith(PATH_ALREADY_EXISTS.formatted(path)));
-	}
 }

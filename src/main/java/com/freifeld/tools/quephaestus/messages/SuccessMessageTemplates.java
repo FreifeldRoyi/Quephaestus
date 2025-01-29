@@ -10,12 +10,13 @@ import static picocli.CommandLine.Help.Ansi.AUTO;
 
 public class SuccessMessageTemplates
 {
-
 	public static final String SUCCESSFUL_FORGING = AUTO.string("""
 	                                                            \uD83C\uDF89 @|bold,fg(green) DONE|@ \uD83C\uDF89
 	                                                            Created:
 	                                                            %s
 	                                                            """.trim());
+
+	public static final String POSSIBLE_ELEMENTS = "Possible elements names are: %s";
 
 	public static void forgeSuccessMessage(CommandSpec spec, Collection<Path> paths)
 	{
@@ -24,4 +25,9 @@ public class SuccessMessageTemplates
 		spec.commandLine().getOut().println(message);
 	}
 
+	public static void possibleElements(CommandSpec spec, Collection<String> elements)
+	{
+		final var message = POSSIBLE_ELEMENTS.formatted(elements);
+		spec.commandLine().getOut().println(message);
+	}
 }

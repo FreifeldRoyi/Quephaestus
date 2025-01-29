@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.DIRECTORY_DOES_NOT_EXIST;
+import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.PATH_CANNOT_BE_ABSOLUTE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusMainTest
@@ -89,8 +90,10 @@ class DirectoryMixinTest
 	public void test_setBaseDirectory_absolutePath(DirectoryMixin cut)
 	{
 		var absolutePath = Path.of("").toAbsolutePath();
-		cut.setBaseDirectory(Optional.of(absolutePath.toString()));
-		assertEquals(cut.baseDirectory(), absolutePath); // stored as is
+		assertThrowsExactly(
+				ParameterException.class,
+				() -> cut.setBaseDirectory(Optional.of(absolutePath.toString())),
+				PATH_CANNOT_BE_ABSOLUTE_PATH.formatted(absolutePath));
 	}
 
 	@ParameterizedTest
@@ -117,7 +120,7 @@ class DirectoryMixinTest
 		var baseDirectory = Files.createTempDirectory(workingDirectory, "base");
 		assertDoesNotThrow(() -> {
 			cut.setWorkingDirectory(Optional.of(workingDirectory.toString()));
-			cut.setBaseDirectory(Optional.of(baseDirectory.toString()));
+			cut.setBaseDirectory(Optional.of(workingDirectory.relativize(baseDirectory).toString()));
 		});
 
 		assertEquals(baseDirectory, cut.combined());

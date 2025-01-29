@@ -6,6 +6,8 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
+import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.possibleElements;
+
 @Command(name = "list-elements", mixinStandardHelpOptions = true)
 public class ListCommandsCommand implements Runnable
 {
@@ -18,8 +20,6 @@ public class ListCommandsCommand implements Runnable
 	@Override
 	public void run()
 	{
-		this.spec.commandLine()
-		         .getOut()
-		         .println("Possible element names are: " + this.configFile.configuration().elements().keySet());
+		possibleElements(this.spec, this.configFile.configuration().elements().keySet());
 	}
 }

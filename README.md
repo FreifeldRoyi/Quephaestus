@@ -14,55 +14,51 @@ The name "Quephaestus" is a fusion of **"Qu"** (a nod to Quarkus, though the too
 
 **Installation is currently TBD.** For now, you can download the latest release from [GitHub Releases](#) (Mac, Linux, Windows executables available).
 
-## Usage
+## Quick start
 
 Quephaestus provides two primary commands for generating files:
 
-### **Forge a Single File**
-
 ```sh
+# Forge a Single File
 quephaestus forge -f path/to/my/config.yaml -m my-module-name -w path/to/working-directory -b path/to/base-directory my-element-name
-```
 
-### **Forge a Full Blueprint (Multiple Files)**
-
-```sh
+# Forge a Blueprint (Multiple Files)
 quephaestus forge-blueprint -f path/to/my/config.yaml -m my-module-name -w path/to/working-directory -b path/to/base-directory my-blueprint-name
+
+# -f → Path to the configuration file  
+# -m → Module name (used as a contextual grouping for the generated files)  
+# -w → Working directory. The root directory where all operations are performed (typically the project's main directory)  
+# -b → Base directory. A subdirectory inside the working directory where the forged files should be placed  
+# -d → Inline json data For example: -d "{\"name\":"123", \"hello\": \"world\"}"
+# -p → Payload. A path to a json file containing mappings for your data   
+# <element-name>` or `<blueprint-name>` → The specific element or blueprint to generate.  
 ```
 
-### **Command Breakdown**
-
-- `-f` → Path to the configuration file.
-- `-m` → Module name (used as a contextual grouping for the generated files).
-- `-w` → **Working directory**: The root directory where all operations are performed (typically the project's main directory).
-- `-b` → **Base directory**: A subdirectory inside the working directory where the forged files should be placed.
-- `<element-name>` or `<blueprint-name>` → The specific element or blueprint to generate.
-
-### **Example Directory Structure**
-
-For a Java project:
-
-- **Working directory**: The root of your project (e.g., where `pom.xml` or `build.gradle` resides).
-- **Base directory**: A common subdirectory for source files (e.g., `src/main/java`).
-
-Generated files will be placed under:
+Forged files will be placed under:
 
 ```
 [working-directory]/[base-directory]/[module]/[element path]/[filename]
 ```
 
 Where:
+- `[Working directory]` - The root of your project
+- `[Base directory]` - A common subdirectory for source files
+- `[element path]` - is defined in the `path` field of the configuration file
+- `[filename]` - follows the pattern in the `namePattern` field of the configuration file
 
-- `[element path]` is defined in the `path` field of the configuration file.
-- `[filename]` follows the pattern in the `namePattern` field of the configuration file.
+> 📘 **Note**     
+> If `-w` and `-b` are omitted, the current directory is used for both.
 
-If `-w` and `-b` are omitted, the current directory is used for both.
+#### For example: ####  
+In a java project named `awesome-project` all files are stored in a folder named `awesome-project`.  
+The source files are, generally speaking, stored under `src/main/java/com/awesomeProject/`.
+Good candidates for working and base directories are `-w awesome-project -b src/main/java/com/awesomeProject`
 
 ## Configuration
 
 Quephaestus relies on a YAML-based configuration file to define **templates and blueprints**.
 
-Example:
+### Example: ###
 
 ```yaml
 project: "testproject"
@@ -71,7 +67,7 @@ templatesFolder: "./templates"
 elements:
   resource:
     path: "boundary/api/{version}"
-    namePattern: "{name.toPascalCase}Resource.java"
+    namePattern: "{name.toPascalCase}Resource.go"
   orchestrator:
     path: "control"
     namePattern: "{name.toPascalCase}Orchestrator.java"
@@ -83,16 +79,6 @@ blueprints:
       version: "v1"
 ```
 
-### **How It Works**
-
-- **elements**: Define reusable components in your DSL.
-- **blueprints**: Combine multiple elements to generate entire structures.
-- **mappings**: Static values to fill in template placeholders.
-- **Predefined interpolation points**:
-    - `{project}` → Defined by `project` in config.
-    - `{module}` → Provided via `-m` in CLI.
-    - `{namespace}` → Defined by `namespace` in config.
-
 ## Templates (`.qphs` Files)
 
 Templates are stored in the folder specified by `templatesFolder` and should match element names. For example, if `resource` is an element, its corresponding template file should be `resource.qphs`.
@@ -101,26 +87,25 @@ Quephaestus templates follow the **Qute** templating engine syntax. For more det
 
 ## Glossary
 
-- **Element** → A DSL component used in your project. Example: A backend developer might define `controller`, `repository`, or `orchestrator` as elements.
-- **Template** → A `.qphs` file that serves as a skeleton for a generated file. It can include Qute expressions and placeholders.
-- **Module** → A contextual grouping for generated files. Can represent a domain (DDD) or a related set of components.
-- **Blueprint** → A combination of multiple elements, allowing multiple files to be forged together.
-- **Working Directory** → The root directory where all operations are performed (usually the main project directory).
-- **Base Directory** → A subdirectory inside the working directory where forged files should be placed (e.g., `src/main/java` in a Java project).
+- **Element** → A reusable components in your DSL, used in your project. Example: `controller`, `repository`, or `orchestrator`
+- **Template** → A `.qphs` file that serves as a skeleton for a generated file. It can include Qute expressions and placeholders
+- **Module** → A contextual grouping for generated files. Can represent a domain (DDD) or a related set of components
+- **Blueprint** → A combination of multiple elements, allowing multiple files to be forged together
+- **Working Directory** → The root directory where all operations are performed (usually the main project directory)
+- **Base Directory** → A subdirectory inside the working directory where forged files should be placed
+- **mappings**: Static values to fill in template placeholders
 
 ## Contribution
 
 We welcome contributions! Here’s how you can help:
 
-- **Submit Issues**: Found a bug? Have an idea? [Open an issue](#)!
+- **Submit Issues**: Found a bug? Have an idea? [Open an issue](https://github.com/FreifeldRoyi/Quephaestus/issues/new/choose)!
 - **Feature Requests**: Have an idea for a new subcommand? Let’s discuss!
 
 ## Future Enhancements
 
 - **Logging & Debugging** (`--verbose`, `--debug`)
 - **Additional Subcommands** for more automation
-- **Template Sharing** via a public repository
-
 
 ##  Known issues
-* Due to a bug with picocli, the `-d` & `-p` options, appear twice in the usage printout - https://github.com/remkop/picocli/issues/2309
+* Due to a [bug in picocli lib](https://github.com/remkop/picocli/issues/2309), the `-d` & `-p` options, appear twice in the usage printout

@@ -4,6 +4,7 @@ import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
 import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
+import com.freifeld.tools.quephaestus.mixins.DataMixin;
 import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
 import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
 import jakarta.inject.Inject;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.*;
 import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.forgeSuccessMessage;
@@ -34,6 +36,9 @@ public class ForgeBlueprintCommand implements Runnable
 
 	@Mixin
 	DirectoryMixin directoryMixin;
+
+	@Mixin
+	DataMixin dataMixin;
 
 	@Spec
 	CommandSpec commandSpec;
@@ -79,23 +84,27 @@ public class ForgeBlueprintCommand implements Runnable
 		return templatePaths;
 	}
 
-	public Map<String, String> blueprintMappings()
+	public Map<String, String> createMappings()
 	{
-		return new HashMap<>(this.configFileMixin.configuration()
-		                                         .blueprints()
-		                                         .get(this.blueprintName)
-		                                         .mappings());
+		// 1. blueprint mappings
+		var blueprintMappings = this.configFileMixin.configuration().blueprints().get(this.blueprintName).mappings();
+
+		// 2. data mappings
+		var dataMappings = this.dataMixin.mappings();
+
+		final var combined = Stream.concat(blueprintMappings.entrySet().stream(), dataMappings.entrySet().stream())
+		                           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		return new HashMap<>(combined);
 	}
 
 	@Override
 	public void run()
 	{
-
 		// TODO validate blueprint includes that are also in commands
 		final var templatePaths = this.findTemplateFiles();
 		final var blueprint = new Blueprint(
 				templatePaths,
-				this.blueprintMappings(),
+				this.createMappings(),
 				this.moduleMixin.moduleName(),
 				this.moduleMixin.modulePath(),
 				this.configFileMixin.configuration(),

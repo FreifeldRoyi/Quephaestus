@@ -22,7 +22,7 @@ public class ModuleMixin
 	private CommandSpec spec;
 
 	@Spec(Target.MIXEE)
-	public void setSpec(CommandSpec spec)
+	public void setCommandSpec(CommandSpec spec)
 	{
 		this.spec = spec;
 	}
