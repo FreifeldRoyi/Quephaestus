@@ -1,18 +1,25 @@
 # Quephaestus
 
-> **Forge your own path. Build smarter. Deliver faster.**
+[![Tests](https://github.com/FreifeldRoyi/Quephaestus/actions/workflows/build-and-test.yaml/badge.svg)](https://github.com/FreifeldRoyi/Quephaestus/actions/workflows/build-and-test.yaml)
 
 ## Overview
+> **Forge your own path. Build smarter. Deliver faster.**
 
-Quephaestus is a powerful yet flexible scaffolding tool designed to boost developer productivity. Unlike traditional generators that enforce rigid structures, Quephaestus allows you to define **your own templates, folder structures, and DSLs**. Whether you're creating a backend module, a set of configuration files, or any standardized project setup, Quephaestus lets you tailor the process to fit **your** workflow.
+Quephaestus is a powerful yet flexible scaffolding tool designed to boost developer productivity. Unlike traditional
+generators that enforce rigid structures, Quephaestus allows you to define **your own templates, folder structures, and
+DSLs**. Whether you're creating a backend module, a set of configuration files, or any standardized project setup,
+Quephaestus lets you tailor the process to fit **your** workflow.
 
 ## Why "Quephaestus"?
 
-The name "Quephaestus" is a fusion of **"Qu"** (a nod to Quarkus, though the tool is not Quarkus-specific) and **"Hephaestus"**, the Greek god of blacksmithing and craftsmanship. Just as Hephaestus forged legendary tools for the gods, Quephaestus helps developers forge their own tools, modules, and project structures.
+The name "Quephaestus" is a fusion of **"Qu"** (a nod to Quarkus, though the tool is not Quarkus-specific) and **"
+Hephaestus"**, the Greek god of blacksmithing and craftsmanship. Just as Hephaestus forged legendary tools for the gods,
+Quephaestus helps developers forge their own tools, modules, and project structures.
 
 ## Installation
 
-**Installation is currently TBD.** For now, you can download the latest release from [GitHub Releases](#) (Mac, Linux, Windows executables available).
+**Installation is currently TBD.** For now, you can download the latest release from [GitHub Releases](#) (Mac, Linux,
+Windows executables available).
 
 ## Quick start
 
@@ -41,6 +48,7 @@ Forged files will be placed under:
 ```
 
 Where:
+
 - `[Working directory]` - The root of your project
 - `[Base directory]` - A common subdirectory for source files
 - `[element path]` - is defined in the `path` field of the configuration file
@@ -50,6 +58,7 @@ Where:
 > If `-w` and `-b` are omitted, the current directory is used for both.
 
 #### For example: ####  
+
 In a java project named `awesome-project` all files are stored in a folder named `awesome-project`.  
 The source files are, generally speaking, stored under `src/main/java/com/awesomeProject/`.
 Good candidates for working and base directories are `-w awesome-project -b src/main/java/com/awesomeProject`
@@ -73,7 +82,7 @@ elements:
     namePattern: "{name.toPascalCase}Orchestrator.java"
 blueprints:
   full-module:
-    elements: [resource, orchestrator]
+    elements: [ resource, orchestrator ]
     mappings:
       name: "{module}"
       version: "v1"
@@ -81,14 +90,18 @@ blueprints:
 
 ## Templates (`.qphs` Files)
 
-Templates are stored in the folder specified by `templatesFolder` and should match element names. For example, if `resource` is an element, its corresponding template file should be `resource.qphs`.
+Templates are stored in the folder specified by `templatesFolder` and should match element names. For example, if
+`resource` is an element, its corresponding template file should be `resource.qphs`.
 
-Quephaestus templates follow the **Qute** templating engine syntax. For more details, check out the [Qute documentation](https://quarkus.io/guides/qute).
+Quephaestus templates follow the **Qute** templating engine syntax. For more details, check out
+the [Qute documentation](https://quarkus.io/guides/qute).
 
 ## Glossary
 
-- **Element** → A reusable components in your DSL, used in your project. Example: `controller`, `repository`, or `orchestrator`
-- **Template** → A `.qphs` file that serves as a skeleton for a generated file. It can include Qute expressions and placeholders
+- **Element** → A reusable components in your DSL, used in your project. Example: `controller`, `repository`, or
+  `orchestrator`
+- **Template** → A `.qphs` file that serves as a skeleton for a generated file. It can include Qute expressions and
+  placeholders
 - **Module** → A contextual grouping for generated files. Can represent a domain (DDD) or a related set of components
 - **Blueprint** → A combination of multiple elements, allowing multiple files to be forged together
 - **Working Directory** → The root directory where all operations are performed (usually the main project directory)
@@ -99,7 +112,8 @@ Quephaestus templates follow the **Qute** templating engine syntax. For more det
 
 We welcome contributions! Here’s how you can help:
 
-- **Submit Issues**: Found a bug? Have an idea? [Open an issue](https://github.com/FreifeldRoyi/Quephaestus/issues/new/choose)!
+- **Submit Issues**: Found a bug? Have an
+  idea? [Open an issue](https://github.com/FreifeldRoyi/Quephaestus/issues/new/choose)!
 - **Feature Requests**: Have an idea for a new subcommand? Let’s discuss!
 
 ## Future Enhancements
@@ -107,5 +121,7 @@ We welcome contributions! Here’s how you can help:
 - **Logging & Debugging** (`--verbose`, `--debug`)
 - **Additional Subcommands** for more automation
 
-##  Known issues
-* Due to a [bug in picocli lib](https://github.com/remkop/picocli/issues/2309), the `-d` & `-p` options, appear twice in the usage printout
+## Known issues
+
+* Due to a [bug in picocli lib](https://github.com/remkop/picocli/issues/2309), the `-d` & `-p` options, appear twice in
+  the usage printout
