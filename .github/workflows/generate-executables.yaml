@@ -1,4 +1,4 @@
-name: Build
+name: Generate executables
 on:
   workflow_dispatch:
     inputs:
