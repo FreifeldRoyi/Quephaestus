@@ -14,8 +14,6 @@ on:
 jobs:
   native-build:
     name: Native image build
-    needs:
-      - build
     runs-on: ["${{ inputs.os }}"]
     steps:
       - name: Checkout
