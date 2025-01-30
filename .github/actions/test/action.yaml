@@ -1,5 +1,9 @@
 name: Test
 description: Test and verify the code
+inputs:
+  github_token:
+    description: Github token
+    required: true
 runs:
   using: "composite"
   steps:
@@ -17,7 +21,7 @@ runs:
       uses: madrapps/jacoco-report@v1.7.1
       with:
         paths: ${{ github.workspace }}/target/jacoco-report/jacoco.xml
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.github_token }}
         #          min-coverage-overall: 40
         #          min-coverage-changed-files: 60
         title: Code Coverage
