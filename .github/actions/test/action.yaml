@@ -1,0 +1,24 @@
+name: Test
+description: Test and verify the code
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'graalvm'
+        java-version: '23'
+        cache: 'maven'
+        cache-dependency-path: 'pom.xml'
+    - name: Build & test
+      run: mvn verify
+      shell: bash
+    - name: Report coverage
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.7.1
+      with:
+        paths: ${{ github.workspace }}/target/jacoco-report/jacoco.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        #          min-coverage-overall: 40
+        #          min-coverage-changed-files: 60
+        title: Code Coverage
+        update-comment: true
