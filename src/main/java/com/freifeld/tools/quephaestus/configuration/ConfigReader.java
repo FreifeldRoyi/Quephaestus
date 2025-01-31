@@ -2,6 +2,7 @@ package com.freifeld.tools.quephaestus.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,7 +13,7 @@ public class ConfigReader
 {
 	public static QuephaestusConfiguration readConfig(String configFile)
 	{
-		final var objectMapper = new ObjectMapper(new YAMLFactory());
+		final var objectMapper = new ObjectMapper(new YAMLFactory()).registerModule(new Jdk8Module());
 		try (var readFile = new FileInputStream(configFile))
 		{
 			return objectMapper.readValue(readFile, QuephaestusConfiguration.class);

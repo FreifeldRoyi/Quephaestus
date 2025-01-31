@@ -30,7 +30,8 @@ public class ModuleMixin
 	@Option(names = { "-m", "--module" },
 	        description = "The name of the module to generate in",
 	        order = 3,
-	        required = true)
+	        required = true,
+			arity = "1")
 	public void setModule(String module) throws IOException
 	{
 		if (module == null || module.isBlank())

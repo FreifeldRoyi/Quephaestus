@@ -2,9 +2,9 @@ package com.freifeld.tools.quephaestus.exceptions;
 
 import java.util.Set;
 
-public class MissingDataException extends Exception
+public class MissingDataException extends RuntimeException
 {
-	private Set<String> missing;
+	private final Set<String> missing;
 	public MissingDataException(Set<String> missing) {
 		this.missing = missing;
 	}

@@ -26,7 +26,7 @@ public class DirectoryMixin
 		this.commandSpec = commandSpec;
 	}
 
-	@Option(names = { "-w", "--working-dir" }, description = "Working directory", order = 1, required = false)
+	@Option(names = { "-w", "--working-dir" }, description = "Working directory", order = 1, required = false, arity = "0..1")
 	public void setWorkingDirectory(Optional<String> workingDirectory)
 	{
 		var directory = workingDirectory.or(() -> Optional.of("")).map(Path::of).map(p -> {
@@ -51,7 +51,7 @@ public class DirectoryMixin
 		return this.workingDirectory;
 	}
 
-	@Option(names = { "-b", "--base-dir" }, description = "base directory", order = 2, required = false)
+	@Option(names = { "-b", "--base-dir" }, description = "base directory", order = 2, required = false, arity = "0..1")
 	public void setBaseDirectory(Optional<String> baseDirectory)
 	{
 		var directory = baseDirectory.or(() -> Optional.of("")).map(Path::of).get();

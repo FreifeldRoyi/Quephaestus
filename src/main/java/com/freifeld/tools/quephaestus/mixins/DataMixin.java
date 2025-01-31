@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.pathDoesNotExist;
@@ -24,7 +25,7 @@ public class DataMixin
 	private CommandSpec spec;
 	private Map<String, String> mappings;
 
-	@ArgGroup(exclusive = true)
+	@ArgGroup(exclusive = true, multiplicity = "0..1")
 	public void setExclusive(DataMixin.Exclusive exclusive)
 	{
 		this.exclusive = exclusive;
@@ -59,13 +60,15 @@ public class DataMixin
 			}
 		}
 
-		@Option(names = { "-d", "--data" }, description = "Inline json data containing mappings")
-		public void setData(String manualData)
+		@Option(names = { "-d", "--data" },
+		        description = "'key=value' formatted tuples. (repeated)",
+		        arity = "*")
+		public void setData(Map<String, String> data)
 		{
-			this.parseContent(manualData);
+			this.mixin.mappings = new HashMap<>(data);
 		}
 
-		@Option(names = { "-p", "--payload" }, description = "Data file containing mappings")
+		@Option(names = { "-p", "--payload" }, description = "Data file containing mappings", arity = "0..1")
 		public void setPayload(String filePath)
 		{
 			final var path = Path.of(filePath);

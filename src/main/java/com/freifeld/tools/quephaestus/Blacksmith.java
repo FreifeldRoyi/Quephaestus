@@ -58,11 +58,16 @@ public class Blacksmith
 	{
 		final var datasource = new HashMap<String, String>();
 		// 1. Configuration
-		datasource.put("project", blueprint.configuration().project());
-		datasource.put("namespace", blueprint.configuration().namespace());
-		datasource.put("module", blueprint.moduleName());
+		blueprint.configuration().project().ifPresent(project -> datasource.put("project", project));
+		blueprint.configuration().namespace().ifPresent(namespace -> datasource.put("namespace", namespace));
+		datasource.put("module", blueprint.moduleName()); // TODO can be optional
 
 		// 2. External mappings - can be static or set from well known interpolation slots
+//		final var externalMappings = blueprint.mappings().entrySet().stream().collect(Collectors.groupingBy(
+//				Map.Entry::getKey, Collectors.mapping(
+//						entry ->
+//				)
+//		))
 		final var externalMappings = blueprint.mappings().entrySet().stream().reduce(
 				new HashMap<String, String>(), (acc, entry) -> {
 					final var mappingTemplate = this.forge.parse(entry.getValue());
@@ -129,7 +134,7 @@ public class Blacksmith
 		//		}
 	}
 
-	public Set<Path> forge(Blueprint blueprint) throws MissingDataException
+	public Set<Path> forge(Blueprint blueprint)
 	{
 		final var configuration = blueprint.configuration();
 		final var datasource = this.initialInterpolationSlots(blueprint);
