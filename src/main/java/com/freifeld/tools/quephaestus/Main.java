@@ -13,10 +13,14 @@ public class Main implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;
 
+    @Inject
+    ExceptionHandler exceptionHandler;
+
     @Override
     public int run(String... args) throws Exception {
         final var commandLine = new CommandLine(new EntryCommand(), factory);
-        commandLine.setParameterExceptionHandler(new ExceptionHandler());
+        commandLine.setParameterExceptionHandler(this.exceptionHandler);
+        commandLine.setExecutionExceptionHandler(this.exceptionHandler);
         return commandLine.execute(args);
     }
 }

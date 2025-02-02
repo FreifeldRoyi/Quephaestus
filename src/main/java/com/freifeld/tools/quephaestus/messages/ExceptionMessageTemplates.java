@@ -29,10 +29,6 @@ public class ExceptionMessageTemplates
 	                                                      %s
 	                                                      """.trim();
 	public static final String TEMPLATE_WAS_NOT_FOUND = "Could not find requested template. Given: %s";
-	public static final String INTERPOLATION_SLOTS_MISSING_VALUES = """
-	                                                                Some expressions are missing a value:
-	                                                                %s
-	                                                                """.trim();
 
 	public static ParameterException directoryDoesNotExistException(CommandSpec spec, Path path)
 	{
@@ -92,12 +88,6 @@ public class ExceptionMessageTemplates
 	public static ParameterException templateWasNotFound(CommandSpec spec, String expected)
 	{
 		final var message = TEMPLATE_WAS_NOT_FOUND.formatted(expected);
-		return new ParameterException(spec.commandLine(), message);
-	}
-
-	public static ParameterException interpolationSlotsMissingValues(CommandSpec spec, Set<String> missing)
-	{
-		final var message = INTERPOLATION_SLOTS_MISSING_VALUES.formatted(formatList(missing));
 		return new ParameterException(spec.commandLine(), message);
 	}
 

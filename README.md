@@ -125,3 +125,6 @@ We welcome contributions! Here’s how you can help:
 
 * Due to a [bug in picocli lib](https://github.com/remkop/picocli/issues/2309), the `-d` & `-p` options, appear twice in
   the usage printout
+* Several qute capabilities are not fully supported. Known ones include:
+  * namespaced expressions
+  * objects in expressions (e.g `{item}` or `{item.name}` where `item` is an object)

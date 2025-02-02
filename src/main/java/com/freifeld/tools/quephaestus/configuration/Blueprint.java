@@ -9,7 +9,8 @@ public record Blueprint(
 		String moduleName,
 		Path modulePath,
 		QuephaestusConfiguration configuration,
-		Path rootPath
+		Path rootPath,
+		boolean interactive
 )
 {
 	public Blueprint(
@@ -19,9 +20,10 @@ public record Blueprint(
 			String moduleName,
 			Path modulePath,
 			QuephaestusConfiguration configuration,
-			Path rootPath
+			Path rootPath,
+			boolean interactive
 	)
 	{
-		this(Map.of(element, templatePath), mappings, moduleName, modulePath, configuration, rootPath);
+		this(Map.of(element, templatePath), mappings, moduleName, modulePath, configuration, rootPath, interactive);
 	}
 }

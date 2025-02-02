@@ -1,4 +1,4 @@
-package com.freifeld.tools.quephaestus.temlpateExtensions;
+package com.freifeld.tools.quephaestus.templateExtensions;
 
 import io.quarkus.qute.TemplateExtension;
 

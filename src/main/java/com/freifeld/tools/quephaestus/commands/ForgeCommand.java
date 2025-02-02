@@ -2,10 +2,7 @@ package com.freifeld.tools.quephaestus.commands;
 
 import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
-import com.freifeld.tools.quephaestus.mixins.ConfigFileMixin;
-import com.freifeld.tools.quephaestus.mixins.DataMixin;
-import com.freifeld.tools.quephaestus.mixins.DirectoryMixin;
-import com.freifeld.tools.quephaestus.mixins.ModuleMixin;
+import com.freifeld.tools.quephaestus.mixins.*;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -33,6 +30,9 @@ public class ForgeCommand implements Runnable {
 
     @Mixin
     DataMixin dataMixin;
+
+    @Mixin
+    InteractiveModeMixin interactiveMixin;
 
     @Spec
     CommandSpec commandSpec;
@@ -70,7 +70,8 @@ public class ForgeCommand implements Runnable {
                 this.moduleMixin.moduleName(),
                 this.moduleMixin.modulePath(),
                 this.configFileMixin.configuration(),
-                this.directoryMixin.combined());
+                this.directoryMixin.combined(),
+                this.interactiveMixin.isInteractive());
         final var forgedFiles = this.blacksmith.forge(blueprint);
         forgeSuccessMessage(this.commandSpec, forgedFiles);
     }

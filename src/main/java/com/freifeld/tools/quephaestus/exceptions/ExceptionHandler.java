@@ -1,10 +1,12 @@
 package com.freifeld.tools.quephaestus.exceptions;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine;
 import picocli.CommandLine.Help.Ansi;
 
 import static picocli.CommandLine.Help.Ansi.AUTO;
 
+@ApplicationScoped
 public class ExceptionHandler implements CommandLine.IParameterExceptionHandler, CommandLine.IExecutionExceptionHandler {
 
     public Ansi.Text toExceptionStyle(String message) {
@@ -25,9 +27,16 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
     }
 
     @Override
-    public int handleExecutionException(Exception ex, CommandLine commandLine, CommandLine.ParseResult fullParseResult) throws Exception {
-        System.out.println("EXCEPTION!!!!"); // TODO
-        return 0;
+    public int handleExecutionException(Exception exception, CommandLine commandLine, CommandLine.ParseResult fullParseResult) throws Exception {
+        switch (exception) {
+            case QuephaestusException ex -> {
+                final var message = this.toExceptionStyle(ex.getMessage());
+                commandLine.getOut().println(message);
+            }
+            default -> throw exception;
+        }
+
+        return 2;
     }
 
 }

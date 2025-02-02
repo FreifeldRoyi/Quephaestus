@@ -22,7 +22,7 @@ elements:
     namePattern: "Create{name.toPascalCase}.java"
 blueprints:
   full-module:
-    elements: [ resource, resource-mapper, orchestrator, repository, entity, create-command , asd]
+    elements: [ resource, resource-mapper, orchestrator, repository, entity, create-command ]
     mappings:
       name: "{module}"
       version: "v3"
