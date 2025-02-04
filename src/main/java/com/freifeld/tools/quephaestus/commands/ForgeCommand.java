@@ -2,6 +2,7 @@ package com.freifeld.tools.quephaestus.commands;
 
 import com.freifeld.tools.quephaestus.Blacksmith;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
+import com.freifeld.tools.quephaestus.configuration.QuephaestusConfiguration;
 import com.freifeld.tools.quephaestus.mixins.*;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
@@ -12,6 +13,8 @@ import picocli.CommandLine.Spec;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.invalidElementException;
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.templateWasNotFound;
@@ -34,13 +37,20 @@ public class ForgeCommand implements Runnable {
     @Mixin
     InteractiveModeMixin interactiveMixin;
 
+    @Mixin
+    ScriptsMixin scriptsMixin;
+
     @Spec
     CommandSpec commandSpec;
 
-    @Inject
     Blacksmith blacksmith;
 
     private String element;
+
+    @Inject
+    public void setBlacksmith(Blacksmith blacksmith) {
+        this.blacksmith = blacksmith;
+    }
 
     @Parameters(paramLabel = "ELEMENT", index = "0", arity = "1")
     private void setElement(String element) {
@@ -63,15 +73,22 @@ public class ForgeCommand implements Runnable {
     @Override
     public void run() {
         final var templatePath = this.findTemplateFile();
+
+        final var configuration = this.configFileMixin.configuration();
         final var blueprint = new Blueprint(
-                templatePath,
-                this.element,
+                Map.of(this.element, templatePath),
                 this.dataMixin.mappings(),
                 this.moduleMixin.moduleName(),
                 this.moduleMixin.modulePath(),
-                this.configFileMixin.configuration(),
-                this.directoryMixin.combined(),
-                this.interactiveMixin.isInteractive());
+                configuration,
+                this.directoryMixin.workingDirectory(),
+                this.directoryMixin.baseDirectory(),
+                this.interactiveMixin.isInteractive(),
+                this.scriptsMixin.preForge().or(() -> configuration.preForgeScript().map(ScriptsMixin::pathSplitter)),
+                this.scriptsMixin.postForge().or(() -> configuration.postForgeScript().map(ScriptsMixin::pathSplitter))
+        );
+
+
         final var forgedFiles = this.blacksmith.forge(blueprint);
         forgeSuccessMessage(this.commandSpec, forgedFiles);
     }
