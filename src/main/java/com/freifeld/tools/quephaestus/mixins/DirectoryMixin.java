@@ -1,5 +1,6 @@
 package com.freifeld.tools.quephaestus.mixins;
 
+import com.freifeld.tools.quephaestus.exceptions.DirectoryDoesNotExistException;
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -10,7 +11,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.absolutePathException;
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.directoryDoesNotExistException;
 
 @ApplicationScoped
 public class DirectoryMixin
@@ -40,7 +40,7 @@ public class DirectoryMixin
 		}).map(Path::toAbsolutePath).get();
 		if (!Files.isDirectory(directory))
 		{
-			throw directoryDoesNotExistException(this.commandSpec, directory);
+			throw new DirectoryDoesNotExistException(directory);
 		}
 
 		this.workingDirectory = directory;
@@ -65,15 +65,5 @@ public class DirectoryMixin
 	public Path baseDirectory()
 	{
 		return this.baseDirectory;
-	}
-
-	public Path combined()
-	{
-		var combinedPath = this.workingDirectory.resolve(baseDirectory);
-		if (!Files.isDirectory(combinedPath))
-		{
-			throw directoryDoesNotExistException(this.commandSpec, combinedPath);
-		}
-		return combinedPath;
 	}
 }

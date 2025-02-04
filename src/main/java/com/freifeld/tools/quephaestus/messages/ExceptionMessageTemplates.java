@@ -13,28 +13,21 @@ public class ExceptionMessageTemplates
 	public static final String PATH_ALREADY_EXISTS = """
 	                                                 Path %s already exists, is not a directory or not empty.
 	                                                 Please provide another non-existent path or empty the given directory
-	                                                 """.trim();
+	                                                 """.strip();
 	public static final String PATH_DOES_NOT_EXIST = "Path %s does not exist";
 	public static final String MODULE_NOT_DEFINED = "Module is not defined";
 	public static final String INVALID_ELEMENT = """
 	                                             '%s' is not a valid element name. Possible values are: %s.
 	                                             Loaded configuration from: %s
-	                                             """.trim();
-	public static final String DIRECTORY_DOES_NOT_EXIST = "Provided directory does not exist: %s";
+	                                             """.strip();
 	public static final String PATH_CANNOT_BE_ABSOLUTE_PATH = "Please provide relative path instead of an absolute path: %s";
 	public static final String TEMPLATES_WERE_NOT_FOUND = """
 	                                                      Could not find requested templates.
 	                                                      Given   (%d): %s
 	                                                      Missing (%d):
 	                                                      %s
-	                                                      """.trim();
+	                                                      """.strip();
 	public static final String TEMPLATE_WAS_NOT_FOUND = "Could not find requested template. Given: %s";
-
-	public static ParameterException directoryDoesNotExistException(CommandSpec spec, Path path)
-	{
-		var message = DIRECTORY_DOES_NOT_EXIST.formatted(path);
-		return new ParameterException(spec.commandLine(), message);
-	}
 
 	public static ParameterException pathDoesNotExist(CommandSpec spec, Path path)
 	{

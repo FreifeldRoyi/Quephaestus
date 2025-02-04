@@ -39,6 +39,9 @@ public class ForgeBlueprintCommand implements Runnable {
     @Mixin
     InteractiveModeMixin interactiveMixin;
 
+    @Mixin
+    ScriptsMixin scriptsMixin;
+
     @Spec
     CommandSpec commandSpec;
 
@@ -93,16 +96,19 @@ public class ForgeBlueprintCommand implements Runnable {
 
     @Override
     public void run() {
-        // TODO validate blueprint includes that are also in commands
         final var templatePaths = this.findTemplateFiles();
+        final var configuration = this.configFileMixin.configuration();
         final var blueprint = new Blueprint(
                 templatePaths,
                 this.createMappings(),
                 this.moduleMixin.moduleName(),
                 this.moduleMixin.modulePath(),
-                this.configFileMixin.configuration(),
-                this.directoryMixin.combined(),
-                interactiveMixin.isInteractive());
+                configuration,
+                this.directoryMixin.workingDirectory(),
+                this.directoryMixin.baseDirectory(),
+                interactiveMixin.isInteractive(),
+                this.scriptsMixin.preForge().or(() -> configuration.preForgeScript().map(ScriptsMixin::pathSplitter)),
+                this.scriptsMixin.postForge().or(() -> configuration.postForgeScript().map(ScriptsMixin::pathSplitter));
         final var forgedFiles = this.blacksmith.forge(blueprint);
         forgeSuccessMessage(this.commandSpec, forgedFiles);
     }

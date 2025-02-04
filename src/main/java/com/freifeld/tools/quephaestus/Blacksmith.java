@@ -3,11 +3,14 @@ package com.freifeld.tools.quephaestus;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.configuration.Element;
 import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
+import com.freifeld.tools.quephaestus.scripting.ScriptRunner;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -19,11 +22,22 @@ import java.util.stream.Stream;
 
 @ApplicationScoped
 public class Blacksmith {
-    @Inject
-    Forge forge;
+    private final Forge forge;
+    private final ScriptRunner runner;
+    private final FileSystemWriter fileWriter;
+    private final InputStream input;
+    private final PrintWriter output;
+    private final PathResolver pathResolver;
 
     @Inject
-    FileSystemWriter writer;
+    public Blacksmith(Forge forge, ScriptRunner runner, FileSystemWriter fileWriter, InputStream input, PrintWriter output, PathResolver pathResolver) {
+        this.forge = forge;
+        this.runner = runner;
+        this.fileWriter = fileWriter;
+        this.input = input;
+        this.output = output;
+        this.pathResolver = pathResolver;
+    }
 
     /**
      * Creates the final path to write: root/module/package/filename
@@ -106,11 +120,7 @@ public class Blacksmith {
     }
 
     private void collectInterpolationSlotsInteractively(Set<String> missingSlots, Map<String, String> datasource) {
-        /*
-		 TODO when I'll provide a solution for data file (instead of manual input) need to change the following
-		  also, I don't like this code. It depends on System.in
-		 */
-        try (var inputDatasource = new InputStreamDatamapSource(System.in, slot -> System.out.printf("%s?%n", slot))) {
+        try (var inputDatasource = new InputStreamDatamapSource(this.input, slot -> this.output.println("%s?%n".formatted(slot)))) {
             for (var slot : missingSlots) {
                 var value = inputDatasource.valueFor(slot);
                 datasource.put(slot, value);
@@ -119,6 +129,10 @@ public class Blacksmith {
     }
 
     public Set<Path> forge(Blueprint blueprint) {
+        // preScript
+        blueprint.preForgeScript()
+                .ifPresent(parts -> this.runner.scriptRunner(blueprint.workingDir(), parts));
+
         // 1. Collect materials for forging
         final var elements = blueprint.configuration().elements();
         final var materials = blueprint.templatePaths()
@@ -146,13 +160,14 @@ public class Blacksmith {
         }
 
         // 3. Render
+        final var rootPath = this.pathResolver.validatedResolvedDirectories(blueprint.workingDir(), blueprint.baseDir());
         final var filesToWrite = materials.stream()
                 .map(material -> {
                     var fileToWrite = this.forge.render(material.template(), datasource);
                     var filenameRendered = this.forge.render(material.filename(), datasource);
                     var elementPathRendered = this.forge.render(material.elementPath(), datasource);
                     var path = this.prepareOutputPath(
-                            blueprint.rootPath(),
+                            rootPath,
                             blueprint.modulePath(),
                             elementPathRendered,
                             filenameRendered);
@@ -163,11 +178,15 @@ public class Blacksmith {
         // 4. Write
         for (var fileEntry : filesToWrite.entrySet()) {
             try {
-                this.writer.writeContent(fileEntry.getKey(), fileEntry.getValue());
+                this.fileWriter.writeContent(fileEntry.getKey(), fileEntry.getValue());
             } catch (IOException e) {
                 throw new RuntimeException(e); // TODO
             }
         }
+
+        // postScript
+        blueprint.postForgeScript()
+                .ifPresent(parts -> this.runner.scriptRunner(blueprint.workingDir(), parts));
 
         return filesToWrite.keySet();
     }

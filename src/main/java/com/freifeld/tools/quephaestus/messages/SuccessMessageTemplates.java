@@ -14,7 +14,7 @@ public class SuccessMessageTemplates
 	                                                            \uD83C\uDF89 @|bold,fg(green) DONE|@ \uD83C\uDF89
 	                                                            Created:
 	                                                            %s
-	                                                            """.trim());
+	                                                            """.strip());
 
 	public static final String POSSIBLE_ELEMENTS = "Possible element names are: %s";
 
