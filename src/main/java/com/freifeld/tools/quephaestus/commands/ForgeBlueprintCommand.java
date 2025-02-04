@@ -108,7 +108,7 @@ public class ForgeBlueprintCommand implements Runnable {
                 this.directoryMixin.baseDirectory(),
                 interactiveMixin.isInteractive(),
                 this.scriptsMixin.preForge().or(() -> configuration.preForgeScript().map(ScriptsMixin::pathSplitter)),
-                this.scriptsMixin.postForge().or(() -> configuration.postForgeScript().map(ScriptsMixin::pathSplitter));
+                this.scriptsMixin.postForge().or(() -> configuration.postForgeScript().map(ScriptsMixin::pathSplitter)));
         final var forgedFiles = this.blacksmith.forge(blueprint);
         forgeSuccessMessage(this.commandSpec, forgedFiles);
     }
