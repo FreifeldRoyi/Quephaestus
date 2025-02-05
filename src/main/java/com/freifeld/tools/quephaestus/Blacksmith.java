@@ -27,16 +27,14 @@ public class Blacksmith {
     private final FileSystemWriter fileWriter;
     private final InputStream input;
     private final PrintWriter output;
-    private final PathResolver pathResolver;
 
     @Inject
-    public Blacksmith(Forge forge, ScriptRunner runner, FileSystemWriter fileWriter, InputStream input, PrintWriter output, PathResolver pathResolver) {
+    public Blacksmith(Forge forge, ScriptRunner runner, FileSystemWriter fileWriter, InputStream input, PrintWriter output) {
         this.forge = forge;
         this.runner = runner;
         this.fileWriter = fileWriter;
         this.input = input;
         this.output = output;
-        this.pathResolver = pathResolver;
     }
 
     /**
@@ -160,7 +158,7 @@ public class Blacksmith {
         }
 
         // 3. Render
-        final var rootPath = this.pathResolver.validatedResolvedDirectories(blueprint.workingDir(), blueprint.baseDir());
+        final var rootPath = PathResolver.validatedResolvedDirectories(blueprint.workingDir(), blueprint.baseDir());
         final var filesToWrite = materials.stream()
                 .map(material -> {
                     var fileToWrite = this.forge.render(material.template(), datasource);

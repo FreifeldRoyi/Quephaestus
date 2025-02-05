@@ -1,7 +1,7 @@
 package com.freifeld.tools.quephaestus.mixins;
 
 import com.freifeld.tools.quephaestus.commands.EntryCommand;
-import com.freifeld.tools.quephaestus.exceptions.DirectoryDoesNotExistException;
+import com.freifeld.tools.quephaestus.exceptions.PathDoesNotExistException;
 import io.quarkus.test.junit.main.QuarkusMainTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,7 +38,7 @@ class DirectoryMixinTest {
     @MethodSource("cutProvider")
     public void test_setWorkingDirectory_nonExistentPath(DirectoryMixin cut) {
         assertThrowsExactly(
-                DirectoryDoesNotExistException.class,
+                PathDoesNotExistException.class,
                 () -> cut.setWorkingDirectory(Optional.of("not-existing")));
     }
 

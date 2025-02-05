@@ -2,10 +2,10 @@ package com.freifeld.tools.quephaestus.exceptions;
 
 import java.nio.file.Path;
 
-public class DirectoryDoesNotExistException extends QuephaestusException {
-    public static final String MESSAGE_FORMAT = "Directory does not exist: %s";
+public class PathDoesNotExistException extends QuephaestusException {
+    public static final String MESSAGE_FORMAT = "Path does not exist: %s";
 
-    public DirectoryDoesNotExistException(Path path) {
+    public PathDoesNotExistException(Path path) {
         super(createMessage(path));
     }
 

@@ -6,20 +6,25 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
-import static com.freifeld.tools.quephaestus.messages.SuccessMessageTemplates.possibleElements;
+import java.util.Collection;
 
 @Command(name = "list-elements", mixinStandardHelpOptions = true)
-public class ListCommandsCommand implements Runnable
-{
-	@Mixin
-	ConfigFileMixin configFile;
+public class ListCommandsCommand implements Runnable {
+    public static final String MESSAGE_FORMAT = "Possible element names are: %s";
 
-	@Spec
-	private CommandSpec spec;
+    @Mixin
+    ConfigFileMixin configFile;
 
-	@Override
-	public void run()
-	{
-		possibleElements(this.spec, this.configFile.configuration().elements().keySet());
-	}
+    @Spec
+    private CommandSpec spec;
+
+    @Override
+    public void run() {
+        this.possibleElements(this.spec, this.configFile.configuration().elements().keySet());
+    }
+
+    public void possibleElements(CommandSpec spec, Collection<String> elements) {
+        final var message = MESSAGE_FORMAT.formatted(elements);
+        spec.commandLine().getOut().println(message);
+    }
 }
