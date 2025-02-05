@@ -1,0 +1,46 @@
+# [Optional]
+# General definitions of project name and namespace.
+# Both will be added automatically as interpolation data
+project: "sample"            # optional
+namespace: "sample"          # optional
+
+# [Required]
+# An absolute/relative path to the templates' directory.
+# If relative, will be relative to the path of this configuration file
+templatesFolder: "./templates"
+
+# [Optional]
+# Can be a command, or an absolute/relative path to script
+# If relative, will be relative to the WORKING directory only
+#preForgeScript: "git commit"
+#postForgeScript: "./build.sh"
+
+# [Required]
+# Elements definition. Must define at least 1 element
+# An element's name can be anything. Suggestion: make it part of the DSL you use on a daily basis
+# path [Mandatory] - is the relative path in the project's folder, in which this element should be created
+#        NOTE 1: It is relative to the working + base dir + module name (`-m`) --> workingDir/baseDir/moduleName/path
+#        NOTE 2: You can use interpolation slots
+# namePattern [Mandatory] - filename to use
+#        NOTE 1: You can use interpolation slots
+elements:
+  resource:
+    path: "boundary/api/{version}"
+    namePattern: "{name.toPascalCase}Resource.go"
+  orchestrator:
+    path: "control"
+    namePattern: "{name.toPascalCase}Orchestrator.java"
+
+# [Optional] (unless you are using blueprints)
+# Blueprints definition. Must define at least 1 element if defined
+# A blueprint name can be anything. Suggestion: make it part of the DSL you use on a daily basis
+# elements [Mandatory] - A list of elements that this blueprint will forge.
+#        NOTE 1: Each element, must be defined in the `elements` section
+# mappings [Optional] - Predefined mappings
+#        NOTE 1: You can use interpolation slots
+blueprints:
+  full-module:
+    elements: [ resource, orchestrator ]
+    mappings:
+      name: "{module}"
+      version: "v1"
