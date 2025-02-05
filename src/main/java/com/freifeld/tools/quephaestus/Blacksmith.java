@@ -3,6 +3,7 @@ package com.freifeld.tools.quephaestus;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.configuration.Element;
 import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
+import com.freifeld.tools.quephaestus.exceptions.PathDoesNotExistException;
 import com.freifeld.tools.quephaestus.exceptions.UnhandledQuephaestusException;
 import com.freifeld.tools.quephaestus.scripting.ScriptRunner;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -52,7 +53,12 @@ public class Blacksmith {
     private Path prepareOutputPath(Path workingDir, Path baseDir, Path modulePath, String packagePath, String filename) {
         try {
             // Will always be absolute since it is absolute is transformed to absolute form
-            final var outputDirectory = workingDir.resolve(baseDir, modulePath).resolve(packagePath);
+            final var root = workingDir.resolve(baseDir);
+            if (!Files.isDirectory(root)) {
+                throw new PathDoesNotExistException(root);
+            }
+
+            final var outputDirectory = root.resolve(modulePath).resolve(packagePath);
             Files.createDirectories(outputDirectory);
             return outputDirectory.resolve(filename);
         } catch (IOException e) {
