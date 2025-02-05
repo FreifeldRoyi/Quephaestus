@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConfigurationValidationException extends QuephaestusException {
+public class ConfigurationValidationException extends HandledQuephaestusException {
     public static final String MESSAGE_FORMAT = "Configuration validation failed [%s]:%n%s";
 
     private final Set<ConstraintViolation<QuephaestusConfiguration>> violations;

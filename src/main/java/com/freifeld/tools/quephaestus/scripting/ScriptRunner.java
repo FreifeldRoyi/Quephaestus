@@ -1,5 +1,7 @@
 package com.freifeld.tools.quephaestus.scripting;
 
+import com.freifeld.tools.quephaestus.exceptions.ScriptRunFailedException;
+import com.freifeld.tools.quephaestus.exceptions.UnhandledQuephaestusException;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.IOException;
@@ -18,12 +20,12 @@ public class ScriptRunner {
             var code = process.waitFor();
 
             if (code != 0) {
-                throw new RuntimeException("Expected result did not");
+                throw new ScriptRunFailedException(code, String.join(" ", scriptParts));
             }
 
             return code;
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e); // TODO
+            throw new UnhandledQuephaestusException("Script execution terminated unsuccessfully", e);
         }
     }
 

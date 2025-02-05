@@ -1,15 +1,11 @@
 package com.freifeld.tools.quephaestus.exceptions;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public class QuephaestusException extends RuntimeException {
-    public static <T> String valuesListAsDisplayString(Stream<T> stream, Function<T, String> elementDisplay) {
-        return stream.map(t -> " - %s".formatted(elementDisplay.apply(t))).collect(Collectors.joining("\n"));
-    }
-
     public QuephaestusException(String message) {
         super(message);
+    }
+
+    public QuephaestusException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

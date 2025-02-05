@@ -20,7 +20,7 @@ public class LauncherParamsBuilder {
             this.configFilePath = new File(resource);
             return this;
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e); // TODO
+            throw new RuntimeException(e);
         }
     }
 

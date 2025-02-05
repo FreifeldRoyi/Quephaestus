@@ -3,6 +3,8 @@ package com.freifeld.tools.quephaestus;
 import com.freifeld.tools.quephaestus.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.configuration.Element;
 import com.freifeld.tools.quephaestus.exceptions.MissingDataException;
+import com.freifeld.tools.quephaestus.exceptions.PathDoesNotExistException;
+import com.freifeld.tools.quephaestus.exceptions.UnhandledQuephaestusException;
 import com.freifeld.tools.quephaestus.scripting.ScriptRunner;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,20 +29,18 @@ public class Blacksmith {
     private final FileSystemWriter fileWriter;
     private final InputStream input;
     private final PrintWriter output;
-    private final PathResolver pathResolver;
 
     @Inject
-    public Blacksmith(Forge forge, ScriptRunner runner, FileSystemWriter fileWriter, InputStream input, PrintWriter output, PathResolver pathResolver) {
+    public Blacksmith(Forge forge, ScriptRunner runner, FileSystemWriter fileWriter, InputStream input, PrintWriter output) {
         this.forge = forge;
         this.runner = runner;
         this.fileWriter = fileWriter;
         this.input = input;
         this.output = output;
-        this.pathResolver = pathResolver;
     }
 
     /**
-     * Creates the final path to write: root/module/package/filename
+     * Creates the final path to write: workingDir/baseDir/module/package/filename
      *
      * @return a fully constructed path including all parts:
      * e.g.</br>
@@ -50,16 +50,19 @@ public class Blacksmith {
      * filename -> <code>MyController.java</code></br>
      * result ---> <code>/tmp/my/module/path/modulename/controllers/api/v1/MyController.java</code>
      */
-    private Path prepareOutputPath(Path root, Path modulePath, String packagePath, String filename) {
+    private Path prepareOutputPath(Path workingDir, Path baseDir, Path modulePath, String packagePath, String filename) {
         try {
-			/*
-			 outputPath should always be absolute since root is constructed from working directory as the first stage, and it is transformed to absolute form
-			 */
+            // Will always be absolute since it is absolute is transformed to absolute form
+            final var root = workingDir.resolve(baseDir);
+            if (!Files.isDirectory(root)) {
+                throw new PathDoesNotExistException(root);
+            }
+
             final var outputDirectory = root.resolve(modulePath).resolve(packagePath);
             Files.createDirectories(outputDirectory);
             return outputDirectory.resolve(filename);
         } catch (IOException e) {
-            throw new RuntimeException(e); // TODO
+            throw new UnhandledQuephaestusException("Failed to create output directory(ies)", e);
         }
     }
 
@@ -160,14 +163,14 @@ public class Blacksmith {
         }
 
         // 3. Render
-        final var rootPath = this.pathResolver.validatedResolvedDirectories(blueprint.workingDir(), blueprint.baseDir());
         final var filesToWrite = materials.stream()
                 .map(material -> {
                     var fileToWrite = this.forge.render(material.template(), datasource);
                     var filenameRendered = this.forge.render(material.filename(), datasource);
                     var elementPathRendered = this.forge.render(material.elementPath(), datasource);
                     var path = this.prepareOutputPath(
-                            rootPath,
+                            blueprint.workingDir(),
+                            blueprint.baseDir(),
                             blueprint.modulePath(),
                             elementPathRendered,
                             filenameRendered);
@@ -180,7 +183,7 @@ public class Blacksmith {
             try {
                 this.fileWriter.writeContent(fileEntry.getKey(), fileEntry.getValue());
             } catch (IOException e) {
-                throw new RuntimeException(e); // TODO
+                throw new UnhandledQuephaestusException("Failed to write files", e);
             }
         }
 
