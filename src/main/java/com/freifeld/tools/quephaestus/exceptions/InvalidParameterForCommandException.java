@@ -3,7 +3,7 @@ package com.freifeld.tools.quephaestus.exceptions;
 import java.util.Set;
 import java.util.function.Function;
 
-public class InvalidParameterForCommandException extends QuephaestusException {
+public class InvalidParameterForCommandException extends HandledQuephaestusException {
     public static final String MESSAGE_FORMAT = """
             '%s' is not a valid parameter for the '%s' command.
             Possible values are:

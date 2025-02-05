@@ -3,7 +3,7 @@ package com.freifeld.tools.quephaestus.exceptions;
 import java.util.Map;
 import java.util.Set;
 
-public class UnrecognizedElementsException extends QuephaestusException {
+public class UnrecognizedElementsException extends HandledQuephaestusException {
     public static final String MESSAGE_FORMAT = """
             Unrecognized element(s) in blueprint(s) [%s]:
             %s
