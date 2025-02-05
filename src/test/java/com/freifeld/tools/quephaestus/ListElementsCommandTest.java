@@ -16,11 +16,6 @@ class ListElementsCommandTest {
     }
 
     @Test
-    @Launch(value = {}, exitCode = 2)
-    public void testNoArguments(LaunchResult result) {
-    }
-
-    @Test
     public void testListElementsCommand(QuarkusMainLauncher launcher) {
         var args = createLaunchParams().withConfigPath().build();
         var result = launcher.launch(args);

@@ -21,15 +21,21 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
 
         final var output = cmd.getErr();
         final var colorScheme = cmd.getColorScheme();
-        output.println(colorScheme.text(message));
+        output.println(colorScheme.errorText(message));
+
         return 2;
     }
 
     @Override
     public int handleParseException(CommandLine.ParameterException exception, String[] args) {
+        final var commandLine = exception.getCommandLine();
+        if ("Missing required subcommand".equals(exception.getMessage())) {
+            commandLine.usage(commandLine.getOut(), commandLine.getColorScheme());
+            return 2;
+        }
 
         if (exception.getCause() instanceof QuephaestusException e) {
-            return this.handleException(e, exception.getCommandLine());
+            return this.handleException(e, commandLine);
         }
 
         throw exception;
