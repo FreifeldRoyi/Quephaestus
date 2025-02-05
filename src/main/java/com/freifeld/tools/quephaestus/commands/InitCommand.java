@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@Command(name = "init", mixinStandardHelpOptions = true)
+@Command(name = "init", mixinStandardHelpOptions = true, description = "Generates a sample configuration file and an empty templates folder")
 public class InitCommand implements Runnable {
 
     Path outputDirectory;
