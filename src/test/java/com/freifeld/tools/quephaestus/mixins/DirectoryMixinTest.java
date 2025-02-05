@@ -1,6 +1,7 @@
 package com.freifeld.tools.quephaestus.mixins;
 
 import com.freifeld.tools.quephaestus.commands.EntryCommand;
+import com.freifeld.tools.quephaestus.exceptions.AbsolutePathException;
 import com.freifeld.tools.quephaestus.exceptions.PathDoesNotExistException;
 import io.quarkus.test.junit.main.QuarkusMainTest;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +13,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.freifeld.tools.quephaestus.messages.ExceptionMessageTemplates.PATH_CANNOT_BE_ABSOLUTE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusMainTest
@@ -79,8 +79,7 @@ class DirectoryMixinTest {
     public void test_setBaseDirectory_absolutePath(DirectoryMixin cut) {
         var absolutePath = Path.of("").toAbsolutePath();
         assertThrowsExactly(
-                ParameterException.class,
-                () -> cut.setBaseDirectory(Optional.of(absolutePath.toString())),
-                PATH_CANNOT_BE_ABSOLUTE_PATH.formatted(absolutePath));
+                AbsolutePathException.class,
+                () -> cut.setBaseDirectory(Optional.of(absolutePath.toString())));
     }
 }
