@@ -6,6 +6,11 @@ import picocli.CommandLine.Command;
 @TopCommand
 @Command(name = "quephaestus",
         mixinStandardHelpOptions = true,
-        subcommands = {ForgeCommand.class, ForgeBlueprintCommand.class, ListCommandsCommand.class})
+        subcommands = {
+                InitCommand.class,
+                ListCommandsCommand.class,
+                ForgeCommand.class,
+                ForgeBlueprintCommand.class
+        })
 public class EntryCommand {
 }
