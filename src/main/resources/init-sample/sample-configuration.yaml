@@ -7,12 +7,12 @@ namespace: "sample"          # optional
 # [Required]
 # An absolute/relative path to the templates' directory.
 # If relative, will be relative to the path of this configuration file
-templatesFolder: "./templates"
+templatesFolder: "./quephaestus/templates"
 
 # [Optional]
 # Can be a command, or an absolute/relative path to script
 # If relative, will be relative to the WORKING directory only
-#preForgeScript: "git commit"
+preForgeScript: "git diff --exit-code"
 #postForgeScript: "./build.sh"
 
 # [Required]

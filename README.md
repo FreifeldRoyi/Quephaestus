@@ -16,11 +16,6 @@ The name "Quephaestus" is a fusion of **"Qu"** (a nod to Quarkus, though the too
 Hephaestus"**, the Greek god of blacksmithing and craftsmanship. Just as Hephaestus forged legendary tools for the gods,
 Quephaestus helps developers forge their own tools, modules, and project structures.
 
-## Installation
-
-**Installation is currently TBD.** For now, you can download the latest release from [GitHub Releases](#) (Mac, Linux,
-Windows executables available).
-
 ## Quick start
 
 Quephaestus provides two primary commands for generating files:
@@ -37,7 +32,8 @@ quephaestus forge-blueprint -f path/to/my/config.yaml -m my-module-name -w path/
 # -w --> Working directory. The root directory where all operations are performed (typically the project's main directory)  
 # -b --> Base directory. A subdirectory inside the working directory where the forged files should be placed  
 # -d --> Inline json data For example: -d "{\"name\":"123", \"hello\": \"world\"}"
-# -p --> Payload. A path to a json file containing mappings for your data   
+# -p --> Payload. A path to a json file containing mappings for your data
+# -i --> Interactive. Will ask for any missing data.   
 # --pre-forge/--post-forge --> a script/command to execute before/after the forge completion
 # <element-name>` or `<blueprint-name>` --> The specific element or blueprint to generate.  
 ```
@@ -125,6 +121,30 @@ Quephaestus templates follow the **Qute** templating engine syntax. For more det
 > There are several capabilities that are not supported at the moment:
 > * namespaced expressions
 > * Objects in expressions (e.g `{item}` or `{item.name}` where `item` is an object)
+
+## Installation
+
+### locally
+
+To build locally you would need to install GraalVM and native image locally.
+I suggest you use `sdkman` for this task. See this [guide](https://www.graalvm.org/latest/getting-started/#installing) for OS specific details.
+Make sure that you are actually running GraalVM and not another JVM.
+`mvn --version` should help figuring it out.  
+
+Once everything is installed and setup, run the following command to compile everything and create your executable:
+
+```shell
+./mvnw clean package -Pnative
+```
+
+This will generate an executable with the `-runner` suffix in the `target` folder, that looks somewhat like this 
+`quephaestus-{version}-{arch}-runner` (On windows it will be an `exe` file).  
+You can paste it to `/usr/local/bin` to make it globally available.
+
+### Formal release [TBD]
+
+At the moment, I generate the executables in a [github pipeline](https://github.com/FreifeldRoyi/Quephaestus/actions/workflows/generate-executables.yaml) every once in a while.  
+For simplicity reasons, the executable is uploaded as an artifact and not to the release page, and without a proper version.  In future releases it will be fixed.  
 
 ## Glossary
 

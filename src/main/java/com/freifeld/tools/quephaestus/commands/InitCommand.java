@@ -1,5 +1,6 @@
 package com.freifeld.tools.quephaestus.commands;
 
+import com.freifeld.tools.quephaestus.Consts;
 import com.freifeld.tools.quephaestus.exceptions.PathDoesNotExistException;
 import com.freifeld.tools.quephaestus.exceptions.UnhandledQuephaestusException;
 import picocli.CommandLine.Command;
@@ -15,7 +16,7 @@ public class InitCommand implements Runnable {
 
     Path outputDirectory;
 
-    @Option(names = {"-d", "--directory"}, description = "Output directory", defaultValue = ".", order = 1, required = false, arity = "0..1")
+    @Option(names = {"-d", "--directory"}, description = "Output directory", defaultValue = ".", order = 1, arity = "0..1")
     public void setDirectory(String outputDirectory) {
         final var directory = Optional.ofNullable(outputDirectory)
                 .filter(s -> !s.isBlank())
@@ -35,7 +36,7 @@ public class InitCommand implements Runnable {
             throw new PathDoesNotExistException(directory);
         }
 
-        this.outputDirectory = directory;
+        this.outputDirectory = directory.normalize();
     }
 
 
@@ -43,10 +44,10 @@ public class InitCommand implements Runnable {
     public void run() {
         try (final var configFile = this.getClass().getClassLoader().getResourceAsStream("init-sample/sample-configuration.yaml")) {
             // 1. Copy configuration to dest
-            Files.copy(configFile, this.outputDirectory.resolve("configuration.yaml"));
+            Files.copy(configFile, this.outputDirectory.resolve(Consts.APP_NAME + ".yaml"));
 
             // 2. Create templates folder in dest
-            Files.createDirectories(this.outputDirectory.resolve("templates"));
+            Files.createDirectories(this.outputDirectory.resolve(Consts.APP_NAME, "templates"));
         } catch (IOException e) {
             throw new UnhandledQuephaestusException("Failed to copy the sample configuration file or generate the initial templates directory", e);
         }
