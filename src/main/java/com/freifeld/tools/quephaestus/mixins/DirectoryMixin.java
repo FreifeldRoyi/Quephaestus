@@ -37,7 +37,7 @@ public class DirectoryMixin {
             throw new PathDoesNotExistException(directory);
         }
 
-        this.workingDirectory = directory;
+        this.workingDirectory = directory.normalize();
     }
 
     public Path workingDirectory() {
@@ -50,7 +50,7 @@ public class DirectoryMixin {
         if (directory.isAbsolute()) {
             throw new AbsolutePathException(directory);
         }
-        this.baseDirectory = directory;
+        this.baseDirectory = directory.normalize();
     }
 
     public Path baseDirectory() {

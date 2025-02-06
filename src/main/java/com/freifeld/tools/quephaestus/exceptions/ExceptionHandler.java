@@ -48,7 +48,12 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
             return this.handleException(ex, commandLine);
         }
 
-        throw exception;
+        final var output = commandLine.getErr();
+        final var colorScheme = commandLine.getColorScheme();
+
+        CommandLine.tracer().debug("Unhandled exception", exception);
+        output.println(colorScheme.errorText(exception.getMessage()));
+        return 2;
     }
 
 }

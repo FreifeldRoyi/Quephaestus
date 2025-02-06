@@ -44,7 +44,7 @@ public class InitCommand implements Runnable {
     public void run() {
         try (final var configFile = this.getClass().getClassLoader().getResourceAsStream("init-sample/sample-configuration.yaml")) {
             // 1. Copy configuration to dest
-            Files.copy(configFile, this.outputDirectory.resolve(Consts.APP_NAME + ".yaml"));
+            Files.copy(configFile, this.outputDirectory.resolve(Consts.APP_NAME, Consts.APP_NAME + ".yaml"));
 
             // 2. Create templates folder in dest
             Files.createDirectories(this.outputDirectory.resolve(Consts.APP_NAME, "templates"));

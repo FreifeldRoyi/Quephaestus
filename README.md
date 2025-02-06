@@ -124,22 +124,39 @@ Quephaestus templates follow the **Qute** templating engine syntax. For more det
 
 ## Installation
 
-### locally
+### Build prerequisites 
 
 To build locally you would need to install GraalVM and native image locally.
 I suggest you use `sdkman` for this task. See this [guide](https://www.graalvm.org/latest/getting-started/#installing) for OS specific details.
 Make sure that you are actually running GraalVM and not another JVM.
 `mvn --version` should help figuring it out.  
 
+### Building a native executable locally
+
 Once everything is installed and setup, run the following command to compile everything and create your executable:
 
 ```shell
-./mvnw clean package -Pnative
+# The `clean` step is optional as well as -DskipTests
+./mvnw clean package -DskipTests -Pnative
 ```
 
-This will generate an executable with the `-runner` suffix in the `target` folder, that looks somewhat like this 
+This will generate an executable with `-runner` suffix in the `target` folder, that looks somewhat like this 
 `quephaestus-{version}-{arch}-runner` (On windows it will be an `exe` file).  
-You can paste it to `/usr/local/bin` to make it globally available.
+You can copy it to `/usr/local/bin` to make it globally available.
+
+### Building an uber jar locally
+
+If you are a Java savvy, and know your way around maven and jars, you can run the following command to compile everything into a single jar.  
+This process is substantially faster than building the native image.
+
+```shell
+# The `clean` step is optional as well as -DskipTests
+./mvnw clean package -DskipTests -Dquarkus.package.jar.type=uber-jar
+```
+
+This will generate an uber-jar with `-runner` suffix in the `target` folder, that looks somewhat like this
+`quephaestus-{version}-{arch}-runner`.
+You can copy to your desired location
 
 ### Formal release [TBD]
 

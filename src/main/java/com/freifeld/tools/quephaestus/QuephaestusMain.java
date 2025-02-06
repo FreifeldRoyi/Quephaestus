@@ -10,7 +10,7 @@ import picocli.CommandLine;
 import java.io.PrintWriter;
 
 @QuarkusMain
-public class Main implements QuarkusApplication {
+public class QuephaestusMain implements QuarkusApplication {
 
     @Inject
     CommandLine.IFactory factory;

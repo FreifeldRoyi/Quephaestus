@@ -7,7 +7,7 @@ namespace: "sample"          # optional
 # [Required]
 # An absolute/relative path to the templates' directory.
 # If relative, will be relative to the path of this configuration file
-templatesFolder: "./quephaestus/templates"
+templatesFolder: "./templates"
 
 # [Optional]
 # Can be a command, or an absolute/relative path to script
