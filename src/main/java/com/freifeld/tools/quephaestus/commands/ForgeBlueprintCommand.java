@@ -109,7 +109,7 @@ public class ForgeBlueprintCommand extends AbstractForgeCommand {
         var dataMappings = this.dataMixin.mappings();
 
         final var combined = Stream.concat(blueprintMappings.entrySet().stream(), dataMappings.entrySet().stream())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (_, dataMapping) -> dataMapping));
         return new HashMap<>(combined);
     }
 
