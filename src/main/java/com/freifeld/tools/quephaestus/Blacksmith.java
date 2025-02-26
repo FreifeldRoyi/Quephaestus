@@ -15,10 +15,10 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,28 +71,23 @@ public class Blacksmith {
         // 1. Configuration
         blueprint.configuration().project().ifPresent(project -> datasource.put("project", project));
         blueprint.configuration().namespace().ifPresent(namespace -> datasource.put("namespace", namespace));
-        datasource.put("module", blueprint.moduleName()); // TODO can be optional
+        datasource.put("module", blueprint.moduleName()); // TODO should be optional
 
         // 2. External mappings - can be static or set from well known interpolation slots
-//		final var externalMappings = blueprint.mappings().entrySet().stream().collect(Collectors.groupingBy(
-//				Map.Entry::getKey, Collectors.mapping(
-//						entry ->
-//				)
-//		))
-        final var externalMappings = blueprint.mappings().entrySet().stream().reduce(
-                new HashMap<String, String>(), (acc, entry) -> {
-                    final var mappingTemplate = this.forge.parse(entry.getValue());
-                    final var slots = this.forge.interpolationSlotsFrom(mappingTemplate);
-                    final var value = slots.isEmpty() ?
-                            entry.getValue() :
-                            this.forge.render(mappingTemplate, datasource);
-                    acc.put(entry.getKey(), value);
-                    return acc;
-
-                }, (map1, map2) -> {
-                    map1.putAll(map2);
-                    return map1;
-                });
+        final var externalMappings = blueprint.mappings().entrySet().stream().collect(
+                Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            final var mappingTemplate = this.forge.parse(entry.getValue());
+                            final var value = this.forge.interpolationSlotsFrom(mappingTemplate)
+                                    .findAny()
+                                    .map(_ -> this.forge.render(mappingTemplate, datasource))
+                                    .orElse(entry.getValue());
+                            return value;
+                        },
+                        (s, s2) -> s2
+                )
+        );
         datasource.putAll(externalMappings);
 
         return datasource;
@@ -111,7 +106,8 @@ public class Blacksmith {
         // all
         return Stream
                 .of(templateInterpolationSlots, filenameInterpolationSlots, elementPathInterpolationSlots)
-                .flatMap(Collection::stream);
+                .flatMap(Function.identity())
+                .distinct();
     }
 
     private ForgeMaterial collectForgeMaterial(String elementName, Element element, Path templatePath) {
