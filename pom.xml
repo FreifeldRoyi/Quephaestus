@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Quarkus -->
-        <version.quarkus>3.18.3</version.quarkus>
+        <version.quarkus>3.18.4</version.quarkus>
         <quarkus.group-id>io.quarkus</quarkus.group-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 
