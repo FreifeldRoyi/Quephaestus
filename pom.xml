@@ -103,6 +103,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${version.plugins.surefire}</version>
                 <configuration>
+                    <argLine>--enable-preview</argLine>
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <argLine>-Djdk.tracePinnedThreads</argLine>
@@ -125,33 +126,33 @@
                             <append>true</append>
                         </configuration>
                     </execution>
-<!--                    <execution>-->
-<!--                        <id>jacoco-check</id>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>post-integration-test</phase>-->
-<!--                        <configuration>-->
-<!--                            <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>-->
-<!--                            <rules>-->
-<!--                                <rule>-->
-<!--                                    <element>BUNDLE</element>-->
-<!--                                    <limits>-->
-<!--                                        <limit>-->
-<!--                                            <counter>LINE</counter>-->
-<!--                                            <value>COVEREDRATIO</value>-->
-<!--                                            <minimum>0.2</minimum> &lt;!&ndash; TODO need to get this up &ndash;&gt;-->
-<!--                                        </limit>-->
-<!--                                        <limit>-->
-<!--                                            <counter>BRANCH</counter>-->
-<!--                                            <value>COVEREDRATIO</value>-->
-<!--                                            <minimum>0.27</minimum> &lt;!&ndash; TODO need to get this up &ndash;&gt;-->
-<!--                                        </limit>-->
-<!--                                    </limits>-->
-<!--                                </rule>-->
-<!--                            </rules>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <!--                    <execution>-->
+                    <!--                        <id>jacoco-check</id>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>check</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <phase>post-integration-test</phase>-->
+                    <!--                        <configuration>-->
+                    <!--                            <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>-->
+                    <!--                            <rules>-->
+                    <!--                                <rule>-->
+                    <!--                                    <element>BUNDLE</element>-->
+                    <!--                                    <limits>-->
+                    <!--                                        <limit>-->
+                    <!--                                            <counter>LINE</counter>-->
+                    <!--                                            <value>COVEREDRATIO</value>-->
+                    <!--                                            <minimum>0.2</minimum> &lt;!&ndash; TODO need to get this up &ndash;&gt;-->
+                    <!--                                        </limit>-->
+                    <!--                                        <limit>-->
+                    <!--                                            <counter>BRANCH</counter>-->
+                    <!--                                            <value>COVEREDRATIO</value>-->
+                    <!--                                            <minimum>0.27</minimum> &lt;!&ndash; TODO need to get this up &ndash;&gt;-->
+                    <!--                                        </limit>-->
+                    <!--                                    </limits>-->
+                    <!--                                </rule>-->
+                    <!--                            </rules>-->
+                    <!--                        </configuration>-->
+                    <!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
