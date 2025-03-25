@@ -115,6 +115,7 @@
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
+                                <argLine>--enable-preview</argLine>
                                 <systemPropertyVariables>
                                     <native.image.path>${project.build.directory}/${project.build.finalName}
                                     </native.image.path>

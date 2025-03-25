@@ -55,10 +55,6 @@
                             <version>${version.quarkus}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <parameters>true</parameters>
-                    <source>23</source>
-                    <target>23</target>
-                    <enablePreview>true</enablePreview>
                 </configuration>
             </plugin>
         </plugins>
