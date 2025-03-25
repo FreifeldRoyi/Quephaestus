@@ -43,5 +43,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.runner-name.outputs.final-name }}
-          path: target/${{ steps.runner-name.outputs.runner-file }}
+          path: quephaestus-cli/target/${{ steps.runner-name.outputs.runner-file }}
           overwrite: true
