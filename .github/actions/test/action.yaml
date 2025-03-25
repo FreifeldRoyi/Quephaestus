@@ -14,7 +14,7 @@ runs:
         cache: 'maven'
         cache-dependency-path: 'pom.xml'
     - name: Build & test
-      run: mvn verify
+      run: MAVEN_OPTS='--enable-preview' mvn verify
       shell: bash
     - name: Report coverage
       id: jacoco

@@ -1,0 +1,11 @@
+name: "Quephaestus core - Core libraries for the quephaestus codegen library"
+metadata:
+  keywords:
+    - "quephaestus"
+    - "codegen"
+    - "code-generations"
+    - "architecture"
+  guide: "https://quarkus.io/guides/datasource"
+  categories:
+    - "data"
+  status: "experimental"

@@ -27,14 +27,14 @@ jobs:
           cache: 'maven'
           cache-dependency-path: 'pom.xml'
       - name: Generate native image
-        run: mvn package -DskipTests -Pnative
+        run: MAVEN_OPTS='--enable-preview' mvn package -DskipTests -Pnative
       - name: Set runner name
         id: runner-name
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require("fs");
-            const files = fs.readdirSync("target");
+            const files = fs.readdirSync("quephaestus-cli/target");
             const runner = files.find(file => file.endsWith("-runner") || file.endsWith("-runner.exe"));
             const finalName = runner.replace(/(-runner)(.exe)?$/, '$2');
             core.setOutput('runner-file', runner);
