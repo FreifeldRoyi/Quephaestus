@@ -22,7 +22,7 @@ class ExtensionProcessor {
     @BuildStep
     AdditionalBeanBuildItem registerClasses() {
         return new AdditionalBeanBuildItem(
-                StringTemplateExtensions.class,
+//                StringTemplateExtensions.class,
                 ScriptRunner.class,
                 StdIOProvider.class,
                 FileSystemWriter.class,
