@@ -93,7 +93,7 @@ public class Blacksmith {
         return datasource;
     }
 
-    private Stream<String> interpolationSlotsFrom(ForgeMaterial material) throws MissingDataException {
+    public Stream<String> interpolationSlotsFrom(ForgeMaterial material) throws MissingDataException {
         // 1. Template
         final var templateInterpolationSlots = this.forge.interpolationSlotsFrom(material.template());
 
@@ -110,7 +110,7 @@ public class Blacksmith {
                 .distinct();
     }
 
-    private ForgeMaterial collectForgeMaterial(String elementName, Element element, Path templatePath) {
+    public ForgeMaterial prepareForgeMaterial(String elementName, Element element, Path templatePath) {
         final var template = this.forge.parse(templatePath);
         final var filenameTemplate = this.forge.parse(element.namePattern());
         final var elementPathTemplate = this.forge.parse(element.path());
@@ -141,7 +141,7 @@ public class Blacksmith {
                 .stream()
                 .map(entry -> {
                     final var element = entry.getKey();
-                    return this.collectForgeMaterial(element, elements.get(element), entry.getValue());
+                    return this.prepareForgeMaterial(element, elements.get(element), entry.getValue());
                 })
                 .toList();
 

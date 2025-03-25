@@ -17,4 +17,8 @@ public class MissingDataException extends HandledQuephaestusException {
         final var listDisplay = valuesListAsDisplayString(missing.stream(), Function.identity());
         return MESSAGE_FORMAT.formatted(listDisplay);
     }
+
+    public Set<String> getMissing() {
+        return this.missing;
+    }
 }

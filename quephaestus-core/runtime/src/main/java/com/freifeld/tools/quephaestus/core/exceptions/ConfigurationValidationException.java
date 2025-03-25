@@ -24,4 +24,8 @@ public class ConfigurationValidationException extends HandledQuephaestusExceptio
                 entry -> "%s: %s".formatted(entry.getKey(), entry.getValue()));
         return MESSAGE_FORMAT.formatted(violationsDisplay);
     }
+
+    public Set<ConstraintViolation<QuephaestusConfiguration>> getViolations() {
+        return this.violations;
+    }
 }

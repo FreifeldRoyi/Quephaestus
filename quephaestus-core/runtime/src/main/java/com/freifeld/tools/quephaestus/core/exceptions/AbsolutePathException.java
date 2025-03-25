@@ -10,7 +10,7 @@ public class AbsolutePathException extends HandledQuephaestusException {
     }
 
     public AbsolutePathException(String path) {
-        super(path);
+        this(Path.of(path));
     }
 
     private static String createMessage(String path) {

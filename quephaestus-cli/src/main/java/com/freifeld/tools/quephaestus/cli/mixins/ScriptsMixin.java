@@ -30,6 +30,7 @@ public class ScriptsMixin {
         this.postForge = pathSplitter(path);
     }
 
+    //TODO move to core logic
     public static List<String> pathSplitter(String path) {
         final var pattern = Pattern.compile("\"(.*)\"|'(.*)'|(\\S+)");
         final var matcher = pattern.matcher(path);
