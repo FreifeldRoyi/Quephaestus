@@ -34,7 +34,7 @@ jobs:
         with:
           script: |
             const fs = require("fs");
-            const files = fs.readdirSync("target");
+            const files = fs.readdirSync("quephaestus-cli/target");
             const runner = files.find(file => file.endsWith("-runner") || file.endsWith("-runner.exe"));
             const finalName = runner.replace(/(-runner)(.exe)?$/, '$2');
             core.setOutput('runner-file', runner);
