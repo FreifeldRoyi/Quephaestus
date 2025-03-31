@@ -30,7 +30,7 @@
 
         <!-- Plugins -->
         <version.plugins.compiler>3.14.0</version.plugins.compiler>
-        <version.plugins.surefire>3.5.2</version.plugins.surefire>
+        <version.plugins.surefire>3.5.3</version.plugins.surefire>
         <version.plugins.failsafe>3.5.2</version.plugins.failsafe>
 
         <!-- Tests -->
