@@ -27,7 +27,7 @@ public record QuephaestusConfiguration(
 
         @NotEmpty
         Map<String, @Valid Element> elements,
-        Map<String, @Valid BlueprintDefinition> blueprints,
+        Map<String, @Valid ElementGroup> elementGroups,
 
         /*
          * Note that if provided with an absolute path the script path will remain the same,

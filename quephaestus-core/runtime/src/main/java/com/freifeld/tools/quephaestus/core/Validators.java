@@ -42,7 +42,7 @@ public class Validators {
 
         // 2. Validate that each blueprint's elements appear on the elementNames list
         final var elementNames = config.elements().keySet();
-        final var missingElements = config.blueprints().entrySet().stream()
+        final var missingElements = config.elementGroups().entrySet().stream()
                 .filter((definition) -> !elementNames.containsAll(definition.getValue().elements()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,

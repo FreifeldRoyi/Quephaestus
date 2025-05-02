@@ -45,7 +45,7 @@ public abstract class Blacksmith<T> {
         blueprint.configuration().namespace().ifPresent(namespace -> datasource.put("namespace", namespace));
         datasource.put("module", blueprint.moduleName()); // TODO should be optional
 
-        // 2. External mappings - can be static or set from well known interpolation slots
+        // 2. External mappings - can be static or set from well-known interpolation slots
         final var externalMappings = blueprint.mappings().entrySet().stream().collect(
                 Collectors.toMap(
                         Map.Entry::getKey,

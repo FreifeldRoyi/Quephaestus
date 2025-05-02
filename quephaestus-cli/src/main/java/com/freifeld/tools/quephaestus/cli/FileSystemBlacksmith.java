@@ -5,6 +5,8 @@ import com.freifeld.tools.quephaestus.core.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.core.exceptions.PathDoesNotExistException;
 import com.freifeld.tools.quephaestus.core.exceptions.UnhandledQuephaestusException;
 import com.freifeld.tools.quephaestus.core.scripting.ScriptRunner;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +16,13 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 
+@ApplicationScoped
 public class FileSystemBlacksmith extends Blacksmith<Path> {
     private final ScriptRunner runner;
     private final InputStream input;
     private final PrintWriter output;
 
+    @Inject
     public FileSystemBlacksmith(Forge forge, ScriptRunner runner, InputStream input, PrintWriter output) {
         super(forge, new FileSystemTemplateResolver());
         this.runner = runner;

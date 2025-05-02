@@ -11,7 +11,7 @@ import picocli.CommandLine.Command;
                 InitCommand.class,
                 ListCommandsCommand.class,
                 ForgeCommand.class,
-                ForgeBlueprintCommand.class
+                ForgeGroupCommand.class
         })
 public class EntryCommand {
 }

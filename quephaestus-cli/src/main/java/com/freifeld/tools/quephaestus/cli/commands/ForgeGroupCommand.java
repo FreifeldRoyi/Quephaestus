@@ -15,9 +15,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Command(name = ForgeBlueprintCommand.COMMAND_NAME, mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
-public class ForgeBlueprintCommand extends AbstractForgeCommand {
-    public static final String COMMAND_NAME = "forge-blueprint";
+@Command(name = ForgeGroupCommand.COMMAND_NAME, mixinStandardHelpOptions = true, sortOptions = true, sortSynopsis = true)
+public class ForgeGroupCommand extends AbstractForgeCommand {
+    public static final String COMMAND_NAME = "forge-element-group";
 
     @Mixin
     ConfigFileMixin configFileMixin;
@@ -37,18 +37,18 @@ public class ForgeBlueprintCommand extends AbstractForgeCommand {
     @Mixin
     ScriptsMixin scriptsMixin;
 
-    private String blueprintName;
+    private String elementGroupName;
 
-    @Parameters(paramLabel = "BLUEPRINT", index = "0", arity = "1")
-    private void setBlueprintName(String blueprintName) {
-        final var possibleKeys = this.configFileMixin.configuration().blueprints().keySet();
-        if (!possibleKeys.contains(blueprintName)) {
+    @Parameters(paramLabel = "GROUP", index = "0", arity = "1")
+    private void setElementGroupName(String elementGroupName) {
+        final var possibleKeys = this.configFileMixin.configuration().elementGroups().keySet();
+        if (!possibleKeys.contains(elementGroupName)) {
             throw new InvalidParameterForCommandException(
-                    ForgeBlueprintCommand.COMMAND_NAME,
-                    blueprintName,
+                    ForgeGroupCommand.COMMAND_NAME,
+                    elementGroupName,
                     possibleKeys);
         }
-        this.blueprintName = blueprintName;
+        this.elementGroupName = elementGroupName;
     }
 
     @Override
@@ -83,8 +83,8 @@ public class ForgeBlueprintCommand extends AbstractForgeCommand {
 
     @Override
     protected Map<String, Path> findTemplateFiles() {
-        final var blueprintDefinition = this.configFileMixin.configuration().blueprints().get(this.blueprintName);
-        final var elements = blueprintDefinition.elements();
+        final var groups = this.configFileMixin.configuration().elementGroups().get(this.elementGroupName);
+        final var elements = groups.elements();
         final var templatePaths = elements.stream()
                 .collect(Collectors.toMap(
                         Function.identity(),
@@ -102,13 +102,13 @@ public class ForgeBlueprintCommand extends AbstractForgeCommand {
 
     @Override
     protected Map<String, String> mappings() {
-        // 1. blueprint mappings
-        var blueprintMappings = this.configFileMixin.configuration().blueprints().get(this.blueprintName).mappings();
+        // 1. group mappings
+        var groupMappings = this.configFileMixin.configuration().elementGroups().get(this.elementGroupName).mappings();
 
         // 2. data mappings
         var dataMappings = this.dataMixin.mappings();
 
-        final var combined = Stream.concat(blueprintMappings.entrySet().stream(), dataMappings.entrySet().stream())
+        final var combined = Stream.concat(groupMappings.entrySet().stream(), dataMappings.entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (_, dataMapping) -> dataMapping));
         return new HashMap<>(combined);
     }
