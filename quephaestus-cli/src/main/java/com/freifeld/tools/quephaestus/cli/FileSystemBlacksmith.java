@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 
-@ApplicationScoped
 public class FileSystemBlacksmith extends Blacksmith<Path> {
     private final ScriptRunner runner;
     private final InputStream input;

@@ -24,14 +24,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Quarkus -->
-        <version.quarkus>3.22.1</version.quarkus>
+        <version.quarkus>3.22.2</version.quarkus>
         <quarkus.group-id>io.quarkus</quarkus.group-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 
         <!-- Plugins -->
         <version.plugins.compiler>3.14.0</version.plugins.compiler>
-        <version.plugins.surefire>3.5.2</version.plugins.surefire>
-        <version.plugins.failsafe>3.5.2</version.plugins.failsafe>
+        <version.plugins.surefire>3.5.3</version.plugins.surefire>
+        <version.plugins.failsafe>3.5.3</version.plugins.failsafe>
 
         <!-- Tests -->
         <version.jacoco>0.8.12</version.jacoco>
