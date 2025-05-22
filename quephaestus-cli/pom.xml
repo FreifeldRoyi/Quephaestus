@@ -68,6 +68,7 @@
             </activation>
             <properties>
                 <quarkus.native.enabled>true</quarkus.native.enabled>
+                <quarkus.native.additional-build-args>-J--enable-preview</quarkus.native.additional-build-args>
             </properties>
             <build>
                 <plugins>

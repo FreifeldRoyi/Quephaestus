@@ -1,11 +1,8 @@
 package com.freifeld.tools.quephaestus.cli.mixins;
 
-import com.freifeld.tools.quephaestus.core.exceptions.AbsolutePathException;
-import com.freifeld.tools.quephaestus.core.exceptions.PathDoesNotExistException;
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.Option;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
