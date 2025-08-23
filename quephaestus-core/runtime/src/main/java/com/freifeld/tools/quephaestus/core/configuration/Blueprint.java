@@ -8,8 +8,8 @@ import java.util.Optional;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public record Blueprint(
-        Map<String, Path> templatePaths,
+public record Blueprint<T>(
+        Map<String, T> templates,
         Map<String, String> mappings,
         String moduleName,
         Path modulePath,
@@ -29,3 +29,4 @@ public record Blueprint(
         Optional<List<String>> postForgeScript
 ) {
 }
+

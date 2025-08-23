@@ -1,5 +1,6 @@
 package com.freifeld.tools.quephaestus.core.configuration;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,7 +8,6 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Map;
 import java.util.Optional;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
 @RegisterForReflection
 public record QuephaestusConfiguration(
         Optional<@NotBlank String> project,
@@ -27,7 +27,7 @@ public record QuephaestusConfiguration(
 
         @NotEmpty
         Map<String, @Valid Element> elements,
-        Map<String, @Valid BlueprintDefinition> blueprints,
+        Map<String, @Valid ElementGroup> elementGroups,
 
         /*
          * Note that if provided with an absolute path the script path will remain the same,

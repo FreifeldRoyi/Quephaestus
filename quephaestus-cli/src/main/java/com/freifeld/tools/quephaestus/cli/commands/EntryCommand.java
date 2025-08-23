@@ -1,6 +1,7 @@
 package com.freifeld.tools.quephaestus.cli.commands;
 
 import com.freifeld.tools.quephaestus.core.Consts;
+
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine.Command;
 
@@ -11,7 +12,7 @@ import picocli.CommandLine.Command;
                 InitCommand.class,
                 ListCommandsCommand.class,
                 ForgeCommand.class,
-                ForgeBlueprintCommand.class
+                ForgeGroupCommand.class
         })
 public class EntryCommand {
 }

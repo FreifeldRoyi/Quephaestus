@@ -5,12 +5,12 @@ import java.util.Set;
 
 public class UnrecognizedElementsException extends HandledQuephaestusException {
     public static final String MESSAGE_FORMAT = """
-            Unrecognized element(s) in blueprint(s):
+            Unrecognized element(s) in element group(s):
             %s
             """;
 
-    public UnrecognizedElementsException(Map<String, Set<String>> missingElementsPerBlueprint) {
-        super(createMessage(missingElementsPerBlueprint));
+    public UnrecognizedElementsException(Map<String, Set<String>> missingElementsPerGroup) {
+        super(createMessage(missingElementsPerGroup));
     }
 
     private static String createMessage(Map<String, Set<String>> missingElements) {

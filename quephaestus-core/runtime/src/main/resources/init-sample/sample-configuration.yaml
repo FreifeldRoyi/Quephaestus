@@ -31,14 +31,14 @@ elements:
     path: "control"
     namePattern: "{name.toPascalCase}Orchestrator.java"
 
-# [Optional] (unless you are using blueprints)
-# Blueprints definition. Must define at least 1 element if defined
-# A blueprint name can be anything. Suggestion: make it part of the DSL you use on a daily basis
-# elements [Mandatory] - A list of elements that this blueprint will forge.
+# [Optional] (unless you are using element groups)
+# Element groups definition. Must define at least 1 element if defined
+# A group name can be anything. Suggestion: make it part of the DSL you use on a daily basis
+# elements [Mandatory] - A list of elements that this group will forge.
 #        NOTE 1: Each element, must be defined in the `elements` section
 # mappings [Optional] - Predefined mappings
 #        NOTE 1: You can use interpolation slots
-blueprints:
+elementGroups:
   full-module:
     elements: [ resource, orchestrator ]
     mappings:

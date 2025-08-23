@@ -1,13 +1,16 @@
 package com.freifeld.tools.quephaestus.cli.commands;
 
 import com.freifeld.tools.quephaestus.cli.mixins.*;
-import com.freifeld.tools.quephaestus.core.Blacksmith;
+import com.freifeld.tools.quephaestus.cli.FileSystemBlacksmith;
 import com.freifeld.tools.quephaestus.core.configuration.Blueprint;
 import com.freifeld.tools.quephaestus.core.exceptions.TemplatesDoesNotExistException;
+import com.freifeld.tools.quephaestus.core.exceptions.UnhandledQuephaestusException;
 import jakarta.inject.Inject;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
@@ -23,10 +26,10 @@ public abstract class AbstractForgeCommand implements Runnable {
             """.strip());
 
     protected CommandSpec commandSpec;
-    protected Blacksmith blacksmith;
+    protected FileSystemBlacksmith blacksmith;
 
     @Inject
-    public void setBlacksmith(Blacksmith blacksmith) {
+    public void setBlacksmith(FileSystemBlacksmith blacksmith) {
         this.blacksmith = blacksmith;
     }
 
@@ -47,7 +50,6 @@ public abstract class AbstractForgeCommand implements Runnable {
 
     public abstract ScriptsMixin scriptsMixin();
 
-
     protected abstract Map<String, Path> findTemplateFiles() throws TemplatesDoesNotExistException;
 
     protected abstract Map<String, String> mappings();
@@ -57,7 +59,7 @@ public abstract class AbstractForgeCommand implements Runnable {
         final var paths = this.findTemplateFiles();
 
         final var configuration = this.configFileMixin().configuration();
-        final var blueprint = new Blueprint(
+        final var blueprint = new Blueprint<>(
                 paths,
                 this.mappings(),
                 this.moduleMixin().moduleName(),
@@ -72,7 +74,19 @@ public abstract class AbstractForgeCommand implements Runnable {
 
 
         final var forgedFiles = this.blacksmith.forge(blueprint);
-        this.forgeSuccessMessage(this.commandSpec, forgedFiles);
+        this.writeFiles(forgedFiles);
+        this.forgeSuccessMessage(this.commandSpec, forgedFiles.keySet());
+
+    }
+
+    private void writeFiles(Map<Path, String> forgedFiles) {
+        for (var fileEntry : forgedFiles.entrySet()) {
+            try {
+                Files.writeString(fileEntry.getKey(), fileEntry.getValue());
+            } catch (IOException e) {
+                throw new UnhandledQuephaestusException("Failed to write files", e);
+            }
+        }
     }
 
     public void forgeSuccessMessage(CommandSpec spec, Collection<Path> paths) {

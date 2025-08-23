@@ -1,4 +1,4 @@
-package com.freifeld.tools.quephaestus.core;
+package com.freifeld.tools.quephaestus.cli;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
+// TODO this class is not nice... Should use interface for printer and input
 @ApplicationScoped
 public class StdIOProvider {
 

@@ -25,6 +25,7 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
         final var output = cmd.getErr();
         final var colorScheme = cmd.getColorScheme();
         output.println(colorScheme.errorText(message));
+//        output.println(colorScheme.stackTraceText(exception));
 
         return 2;
     }
@@ -46,7 +47,6 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
 
     @Override
     public int handleExecutionException(Exception exception, CommandLine commandLine, CommandLine.ParseResult fullParseResult) throws Exception {
-
         if (exception instanceof QuephaestusException ex) {
             return this.handleException(ex, commandLine);
         }
@@ -56,6 +56,7 @@ public class ExceptionHandler implements CommandLine.IParameterExceptionHandler,
 
         CommandLine.tracer().debug("Unhandled exception", exception);
         output.println(colorScheme.errorText(exception.getMessage()));
+        output.println(colorScheme.stackTraceText(exception));
         return 2;
     }
 

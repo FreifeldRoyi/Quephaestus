@@ -24,8 +24,8 @@ Quephaestus provides two primary commands for generating files:
 # Forge a Single File
 quephaestus forge -f path/to/my/config.yaml -m my-module-name -w path/to/working-directory -b path/to/base-directory my-element-name
 
-# Forge a Blueprint (Multiple Files)
-quephaestus forge-blueprint -f path/to/my/config.yaml -m my-module-name -w path/to/working-directory -b path/to/base-directory my-blueprint-name
+# Forge an Element group (Multiple Files)
+quephaestus forge-element-group -f path/to/my/config.yaml -m my-module-name -w path/to/working-directory -b path/to/base-directory my-group-name
 
 # -f --> Path to the configuration file  
 # -m --> Module name (used as a contextual grouping for the generated files)  
@@ -35,7 +35,7 @@ quephaestus forge-blueprint -f path/to/my/config.yaml -m my-module-name -w path/
 # -p --> Payload. A path to a json file containing mappings for your data
 # -i --> Interactive. Will ask for any missing data.   
 # --pre-forge/--post-forge --> a script/command to execute before/after the forge completion
-# <element-name>` or `<blueprint-name>` --> The specific element or blueprint to generate.  
+# <element-name>` or `<group-name>` --> The specific element or group to generate.  
 ```
 
 Forged files will be placed under:
@@ -96,14 +96,14 @@ elements:
     path: "control"
     namePattern: "{name.toPascalCase}Orchestrator.java"
 
-# [Optional] (unless you are using blueprints)
-# Blueprints definition. Must define at least 1 element if defined
-# A blueprint name can be anything. Suggestion: make it part of the DSL you use on a daily basis
-# elements [Mandatory] - A list of elements that this blueprint will forge. 
+# [Optional] (unless you are using an element group)
+# Element groups definition. Must define at least 1 element if defined
+# A group name can be anything. Suggestion: make it part of the DSL you use on a daily basis
+# elements [Mandatory] - A list of elements that this group will forge. 
 #        NOTE 1: Each element, must be defined in the `elements` section
 # mappings [Optional] - Predefined mappings
 #        NOTE 1: You can use interpolation slots
-blueprints:
+elementGroups:
   full-module:
     elements: [ resource, orchestrator ]
     mappings:
@@ -170,7 +170,7 @@ For simplicity reasons, the executable is uploaded as an artifact and not to the
 - **Template** → A `.qphs` file that serves as a skeleton for a generated file. It can include Qute expressions and
   placeholders
 - **Module** → A contextual grouping for generated files. Can represent a domain (DDD) or a related set of components
-- **Blueprint** → A combination of multiple elements, allowing multiple files to be forged together
+- **Element group** → A collection of elements, allowing multiple files to be forged together
 - **Working Directory** → The root directory where all operations are performed (usually the main project directory)
 - **Base Directory** → A subdirectory inside the working directory where forged files should be placed
 - **Mapping**: Static values to fill in template placeholders

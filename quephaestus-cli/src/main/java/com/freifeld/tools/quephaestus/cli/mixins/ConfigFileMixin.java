@@ -2,19 +2,12 @@ package com.freifeld.tools.quephaestus.cli.mixins;
 
 import com.freifeld.tools.quephaestus.core.configuration.ConfigReader;
 import com.freifeld.tools.quephaestus.core.configuration.QuephaestusConfiguration;
-import com.freifeld.tools.quephaestus.core.exceptions.ConfigurationValidationException;
 import com.freifeld.tools.quephaestus.core.exceptions.TemplateFolderDoesNotExistException;
-import com.freifeld.tools.quephaestus.core.exceptions.UnrecognizedElementsException;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.Validation;
-import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Spec;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ConfigFileMixin {

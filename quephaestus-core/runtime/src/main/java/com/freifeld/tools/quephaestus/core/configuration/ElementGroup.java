@@ -6,5 +6,5 @@ import java.util.Set;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public record BlueprintDefinition(Set<String> elements, Map<String, String> mappings)
+public record ElementGroup(Set<String> elements, Map<String, String> mappings)
 { }

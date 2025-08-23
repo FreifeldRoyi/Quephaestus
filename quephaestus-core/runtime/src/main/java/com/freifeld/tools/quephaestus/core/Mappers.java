@@ -6,7 +6,6 @@ import java.io.File;
 import java.nio.file.Path;
 
 public class Mappers {
-
     public static Path prepareModulePath(String module) {
         if (module == null || module.isBlank()) { // TODO might change in the future
             throw new ModuleNameIsEmptyException();
@@ -16,5 +15,4 @@ public class Mappers {
         var moduleFormatted = String.join(File.separator, module.split("\\."));
         return Path.of(moduleFormatted);
     }
-
 }
