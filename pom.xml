@@ -29,7 +29,7 @@
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 
         <!-- Plugins -->
-        <version.plugins.compiler>3.14.0</version.plugins.compiler>
+        <version.plugins.compiler>3.14.1</version.plugins.compiler>
         <version.plugins.surefire>3.5.3</version.plugins.surefire>
         <version.plugins.failsafe>3.5.3</version.plugins.failsafe>
 
